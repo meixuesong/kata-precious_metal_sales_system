@@ -25,9 +25,9 @@ public class OrderItemRepresentation {
         OrderItemRepresentation that = (OrderItemRepresentation) o;
         return Objects.equals(productNo, that.productNo) &&
                 Objects.equals(productName, that.productName) &&
-                Objects.equals(price, that.price) &&
-                Objects.equals(count, that.count) &&
-                Objects.equals(subTotal, that.subTotal);
+                price.compareTo(that.price) == 0 &&
+                count.compareTo(that.count) == 0 &&
+                subTotal.compareTo(that.subTotal) == 0;
     }
 
     @Override

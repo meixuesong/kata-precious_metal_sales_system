@@ -33,7 +33,7 @@ public class DiscountItemRepresentation {
         DiscountItemRepresentation that = (DiscountItemRepresentation) o;
         return Objects.equals(productNo, that.productNo) &&
                 Objects.equals(productName, that.productName) &&
-                Objects.equals(discount, that.discount);
+                discount.compareTo(that.discount) == 0;
     }
 
     @Override

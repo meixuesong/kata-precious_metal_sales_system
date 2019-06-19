@@ -90,22 +90,6 @@ public class OrderRepresentation {
         this.payments = payments == null ? new ArrayList<PaymentRepresentation>() : payments;
     }
 
-    private boolean isBigDecimalEquals(BigDecimal value1, BigDecimal value2) {
-        if (value1 == null && value1 == null) {
-            return true;
-        }
-
-        if (value1 == null && value2 != null) {
-            return false;
-        }
-
-        if (value1 != null && value2 == null) {
-            return false;
-        }
-
-        return value1.compareTo(value2) == 0;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -122,9 +106,9 @@ public class OrderRepresentation {
                 Objects.equals(memberName, that.memberName) &&
                 Objects.equals(discounts, that.discounts) &&
                 Objects.equals(payments, that.payments) &&
-                isBigDecimalEquals(totalPrice, that.totalPrice) &&
-                isBigDecimalEquals(totalDiscountPrice, that.totalDiscountPrice) &&
-                isBigDecimalEquals(receivables, that.receivables);
+                totalPrice.compareTo(that.totalPrice) == 0 &&
+                totalDiscountPrice.compareTo(that.totalDiscountPrice) == 0 &&
+                receivables.compareTo(that.receivables) == 0;
 
         return result;
     }

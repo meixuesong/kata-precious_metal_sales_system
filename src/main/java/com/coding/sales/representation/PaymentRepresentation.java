@@ -27,7 +27,7 @@ public class PaymentRepresentation {
         PaymentRepresentation that = (PaymentRepresentation) o;
 
         return type.equals(that.type) &&
-                amount.equals(that.amount);
+                amount.compareTo(that.amount) == 0;
     }
 
     @Override
