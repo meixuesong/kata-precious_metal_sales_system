@@ -1,0 +1,30 @@
+{
+  "memberId": "6236609999",
+  "items": [
+    {
+      "product": "001001",
+      "amount": 2
+    },
+    {
+      "product": "001002",
+      "amount": 3
+    },
+    {
+      "product": "002002",
+      "amount": 1
+    },
+    {
+      "product": "002003",
+      "amount": 2
+    }
+  ],
+  "payments": [
+    {
+      "type": "balance_of_account",
+      "amount": 9408.00
+    }
+  ],
+  "discountCard": [
+    "discount_card_90"
+  ]
+}
