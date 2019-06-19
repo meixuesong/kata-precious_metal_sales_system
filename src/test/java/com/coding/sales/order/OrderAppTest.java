@@ -1,6 +1,8 @@
 package com.coding.sales.order;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,21 +10,38 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
+@RunWith(Parameterized.class)
 public class OrderAppTest {
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> parameters() {
+        Object[][] data = new Object[][]{
+                {"sample_command.json", "sample_result.txt"},
+        };
+
+        return Arrays.asList(data);
+    }
+
+    private String commandFileName;
+    private String expectedResultFileName;
+
+    public OrderAppTest(String commandFileName, String expectedResultFileName) {
+        this.commandFileName = commandFileName;
+        this.expectedResultFileName = expectedResultFileName;
+    }
+
     @Test
     public void should_checkout_order() {
-        String inputFileName = "sample_command.json";
-        String command = readFromFile(inputFileName);
-
         OrderApp app = new OrderApp();
-        String actualResult = app.checkout(command);
+        String actualResult = app.checkout(readFromFile(commandFileName));
 
-        String expectedResult = readFromFile("sample_result.txt");
-        assertEquals(expectedResult, actualResult);
+        assertEquals(readFromFile(expectedResultFileName), actualResult);
     }
 
     private String readFromFile(String fileName) {
