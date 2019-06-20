@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /* 打印格式
 方鼎银行贵金属购买凭证
@@ -58,20 +57,20 @@ public class OrderRepresentation {
     private static final DecimalFormat MONEY_FORMAT = new DecimalFormat("0.00");
 
     /**
-     * @param orderId            订单号
-     * @param createTime         订单创建时间
-     * @param memberNo           会员编号
-     * @param memberName         会员姓名
-     * @param oldMemberType      原会员等级
-     * @param newMemberType      新会员等级。当新老等级不一致时，视为升级
-     * @param memberPointsIncreased    本次消费会员新增的积分
-     * @param memberPoints       会员最新的积分( = 老积分 + memberPointsIncreased)
-     * @param orderItems         订单明细
-     * @param totalPrice         订单总金额
-     * @param discounts          优惠明细
-     * @param totalDiscountPrice 优惠总金额
-     * @param receivables        应收金额
-     * @param payments           付款记录
+     * @param orderId               订单号
+     * @param createTime            订单创建时间
+     * @param memberNo              会员编号
+     * @param memberName            会员姓名
+     * @param oldMemberType         原会员等级
+     * @param newMemberType         新会员等级。当新老等级不一致时，视为升级
+     * @param memberPointsIncreased 本次消费会员新增的积分
+     * @param memberPoints          会员最新的积分( = 老积分 + memberPointsIncreased)
+     * @param orderItems            订单明细
+     * @param totalPrice            订单总金额
+     * @param discounts             优惠明细
+     * @param totalDiscountPrice    优惠总金额
+     * @param receivables           应收金额
+     * @param payments              付款记录
      */
     public OrderRepresentation(String orderId, Date createTime,
                                String memberNo, String memberName, String oldMemberType, String newMemberType, int memberPointsIncreased, int memberPoints,
@@ -98,29 +97,43 @@ public class OrderRepresentation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderRepresentation that = (OrderRepresentation) o;
-        boolean result = memberPoints == that.memberPoints &&
-                memberPointsIncreased == that.memberPointsIncreased &&
-                Objects.equals(orderId, that.orderId) &&
-                Objects.equals(createTime, that.createTime) &&
-                Objects.equals(memberNo, that.memberNo) &&
-                oldMemberType == that.oldMemberType &&
-                newMemberType == that.newMemberType &&
-                Objects.equals(items, that.items) &&
-                Objects.equals(memberName, that.memberName) &&
-                Objects.equals(discounts, that.discounts) &&
-                Objects.equals(payments, that.payments) &&
-                totalPrice.compareTo(that.totalPrice) == 0 &&
-                totalDiscountPrice.compareTo(that.totalDiscountPrice) == 0 &&
-                receivables.compareTo(that.receivables) == 0;
 
-        return result;
+        OrderRepresentation that = (OrderRepresentation) o;
+
+        if (memberPointsIncreased != that.memberPointsIncreased) return false;
+        if (memberPoints != that.memberPoints) return false;
+        if (!orderId.equals(that.orderId)) return false;
+        if (!createTime.equals(that.createTime)) return false;
+        if (!memberNo.equals(that.memberNo)) return false;
+        if (!memberName.equals(that.memberName)) return false;
+        if (!oldMemberType.equals(that.oldMemberType)) return false;
+        if (!newMemberType.equals(that.newMemberType)) return false;
+        if (!items.equals(that.items)) return false;
+        if (!discounts.equals(that.discounts)) return false;
+        if (totalPrice.compareTo(that.totalPrice) != 0) return false;
+        if (totalDiscountPrice.compareTo(that.totalDiscountPrice) != 0) return false;
+        if (receivables.compareTo(that.receivables) != 0) return false;
+
+        return payments.equals(that.payments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, createTime, memberNo, memberName, oldMemberType, newMemberType, memberPoints,
-                items, totalPrice, discounts, totalDiscountPrice, receivables, payments, memberPointsIncreased);
+        int result = orderId.hashCode();
+        result = 31 * result + createTime.hashCode();
+        result = 31 * result + memberNo.hashCode();
+        result = 31 * result + memberName.hashCode();
+        result = 31 * result + oldMemberType.hashCode();
+        result = 31 * result + newMemberType.hashCode();
+        result = 31 * result + memberPointsIncreased;
+        result = 31 * result + memberPoints;
+        result = 31 * result + items.hashCode();
+        result = 31 * result + totalPrice.hashCode();
+        result = 31 * result + discounts.hashCode();
+        result = 31 * result + totalDiscountPrice.hashCode();
+        result = 31 * result + receivables.hashCode();
+        result = 31 * result + payments.hashCode();
+        return result;
     }
 
     @Override

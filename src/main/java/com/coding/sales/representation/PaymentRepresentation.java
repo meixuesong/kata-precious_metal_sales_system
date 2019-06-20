@@ -1,7 +1,6 @@
 package com.coding.sales.representation;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class PaymentRepresentation {
     private String type;
@@ -29,14 +28,17 @@ public class PaymentRepresentation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         PaymentRepresentation that = (PaymentRepresentation) o;
 
-        return type.equals(that.type) &&
-                amount.compareTo(that.amount) == 0;
+        if (!type.equals(that.type)) return false;
+        return amount.compareTo(that.amount) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, amount);
+        int result = type.hashCode();
+        result = 31 * result + amount.hashCode();
+        return result;
     }
 }

@@ -1,7 +1,6 @@
 package com.coding.sales.representation;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class DiscountItemRepresentation {
     private String productNo;
@@ -36,14 +35,19 @@ public class DiscountItemRepresentation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         DiscountItemRepresentation that = (DiscountItemRepresentation) o;
-        return Objects.equals(productNo, that.productNo) &&
-                Objects.equals(productName, that.productName) &&
-                discount.compareTo(that.discount) == 0;
+
+        if (!productNo.equals(that.productNo)) return false;
+        if (!productName.equals(that.productName)) return false;
+        return discount.compareTo(that.discount) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productNo, productName, discount);
+        int result = productNo.hashCode();
+        result = 31 * result + productName.hashCode();
+        result = 31 * result + discount.hashCode();
+        return result;
     }
 }

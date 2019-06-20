@@ -1,7 +1,6 @@
 package com.coding.sales.representation;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class OrderItemRepresentation {
     private String productNo;
@@ -30,17 +29,26 @@ public class OrderItemRepresentation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         OrderItemRepresentation that = (OrderItemRepresentation) o;
-        return Objects.equals(productNo, that.productNo) &&
-                Objects.equals(productName, that.productName) &&
-                price.compareTo(that.price) == 0 &&
-                amount.compareTo(that.amount) == 0 &&
-                subTotal.compareTo(that.subTotal) == 0;
+
+        if (!productNo.equals(that.productNo)) return false;
+        if (!productName.equals(that.productName)) return false;
+        if (price.compareTo(that.price) != 0) return false;
+        if (amount.compareTo(that.amount) != 0) return false;
+        return subTotal.compareTo(that.subTotal) == 0;
+
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productNo, productName, price, amount, subTotal);
+        int result = productNo.hashCode();
+        result = 31 * result + productName.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + amount.hashCode();
+        result = 31 * result + subTotal.hashCode();
+        return result;
     }
 
     public String getProductNo() {

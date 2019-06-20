@@ -1,4 +1,4 @@
-package com.coding.sales.order;
+package com.coding.sales;
 
 import com.coding.sales.representation.OrderRepresentation;
 
