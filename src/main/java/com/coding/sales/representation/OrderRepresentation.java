@@ -12,17 +12,17 @@ import java.util.Objects;
 方鼎银行贵金属购买凭证
 
 销售单号：0000001 日期：2019-11-11 23:00:00
-客户卡号：6236609999 会员姓名：马丁 客户等级：XXXX  累计积分：XXXX
+客户卡号：6236609999 会员姓名：马丁 客户等级：金卡 累计积分：10001
 
 商品及数量           单价         金额
-(001001)世园会五十国钱币册x 2,998.00,1996.00
-(001002)2019北京世园会纪念银章大全40g x 3, 1380.00,4140.00
-(002002)中国经典钱币套装x 1, 1500.00,1500.00
-(002003)中国银象棋32gx 2, 2200.00,4400.00
+(001001)世园会五十国钱币册x2,998.00,1996.00
+(001002)2019北京世园会纪念银章大全40gx3, 1380.00,4140.00
+(002002)中国经典钱币套装x1, 1500.00,1500.00
+(002003)中国银象棋32gx2, 2200.00,4400.00
 合计：12036.00
 
 优惠清单：#如果有优惠，则打印
- (001002)2019北京世园会纪念银章大全:-138.00
+(001002)2019北京世园会纪念银章大全:-138.00
 (002002)中国经典钱币套装:-10.00
 (002003)中国银象棋:-2420.00
 优惠合计：2568.00 #如果有优惠，则打印
@@ -31,11 +31,15 @@ import java.util.Objects;
 收款：
  9折打折券 x 1
  账户余额：9408.00元
+
 客户等级与积分：#每一项有变化时才打印
  新增积分：9408
  恭喜您升级为金卡客户！
 */
 
+/**
+ * 用于打印的销售凭证
+ */
 public class OrderRepresentation {
     private String orderId;
     private Date createTime;
@@ -142,7 +146,7 @@ public class OrderRepresentation {
             result.append(String.format("(%s)%sx%s %s, %s\n",
                     item.getProductNo(),
                     item.getProductName(),
-                    item.getCount().toString(),
+                    item.getAmount().toString(),
                     MONEY_FORMAT.format(item.getPrice()),
                     MONEY_FORMAT.format(item.getSubTotal())));
         }
@@ -181,7 +185,7 @@ public class OrderRepresentation {
             return "";
         }
 
-        result.append("客户等级与积分：\n");
+        result.append("\n客户等级与积分：\n");
         result.append(String.format(" 新增积分：%d \n", memberPointsIncreased));
         if (!newMemberType.equals(oldMemberType)) {
             result.append(String.format(" 恭喜您升级为%s客户！\n", newMemberType));

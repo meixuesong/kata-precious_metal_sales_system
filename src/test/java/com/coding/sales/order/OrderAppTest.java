@@ -1,5 +1,6 @@
 package com.coding.sales.order;
 
+import com.coding.sales.representation.OrderRepresentation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -39,9 +40,10 @@ public class OrderAppTest {
     @Test
     public void should_checkout_order() {
         OrderApp app = new OrderApp();
-        String actualResult = app.checkout(readFromFile(commandFileName));
+        OrderRepresentation actualRepresentation = app.checkout(readFromFile(commandFileName));
 
-        assertEquals(readFromFile(expectedResultFileName), actualResult);
+        String expectedRepresentation = readFromFile(expectedResultFileName);
+        assertEquals(expectedRepresentation, actualRepresentation.toString());
     }
 
     private String readFromFile(String fileName) {

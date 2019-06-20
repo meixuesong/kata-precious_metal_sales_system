@@ -8,6 +8,12 @@ public class DiscountItemRepresentation {
     private String productName;
     private BigDecimal discount;
 
+    /**
+     * 销售凭证中的优惠项
+     * @param productNo 产品编号
+     * @param productName 产品名称
+     * @param discount 优惠金额
+     */
     public DiscountItemRepresentation(String productNo, String productName, BigDecimal discount) {
         this.productNo = productNo;
         this.productName = productName;
