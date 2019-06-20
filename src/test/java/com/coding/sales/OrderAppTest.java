@@ -5,11 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -38,46 +34,16 @@ public class OrderAppTest {
     @Test
     public void should_checkout_order() {
         OrderApp app = new OrderApp();
-        OrderRepresentation actualRepresentation = app.checkout(readFromFile(commandFileName));
+        OrderRepresentation actualRepresentation = app.checkout(FileReader.readFromFile(getResourceFilePath(commandFileName)));
 
-        String expectedRepresentation = readFromFile(expectedResultFileName);
+        String expectedRepresentation = FileReader.readFromFile(getResourceFilePath(expectedResultFileName));
         assertEquals(expectedRepresentation, actualRepresentation.toString());
     }
 
-    private String readFromFile(String filePath) {
-        String result = "";
-        InputStream is = null;
-        InputStreamReader isr = null;
-        BufferedReader br = null;
-
-        try {
-            is = new FileInputStream(filePath);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            String s;
-            StringBuilder sb = new StringBuilder();
-            while ((s = br.readLine()) != null)
-                sb.append(s + "");
-
-            result = sb.toString();
-
-            br.close();
-        } catch(IOException e) {
-            throw new RuntimeException("Failed to read file: " + filePath);
-        } finally {
-            try {
-                // releases any system resources associated
-                if (is != null)
-                    is.close();
-                if (isr != null)
-                    isr.close();
-                if (br != null)
-                    br.close();
-            } catch (Exception e) {
-            }
-        }
-
-        return result;
+    private String getResourceFilePath(String fileName) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(fileName).getFile());
+        return file.getAbsolutePath();
     }
+
 }

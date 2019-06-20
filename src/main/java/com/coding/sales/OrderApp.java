@@ -1,5 +1,6 @@
 package com.coding.sales;
 
+import com.coding.sales.command.OrderCommand;
 import com.coding.sales.representation.OrderRepresentation;
 
 /**
@@ -10,6 +11,8 @@ public class OrderApp {
     public OrderRepresentation checkout(String orderCommand) {
         OrderRepresentation result = null;
 
+        OrderCommand command = OrderCommand.from(orderCommand);
+//        command.getItems().get(0).
         //TODO: 请完成需求指定的功能
 
 
