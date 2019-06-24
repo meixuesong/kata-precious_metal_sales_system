@@ -14,10 +14,10 @@ import java.util.List;
 客户卡号：6236609999 会员姓名：马丁 客户等级：金卡 累计积分：10001
 
 商品及数量           单价         金额
-(001001)世园会五十国钱币册x2,998.00,1996.00
-(001002)2019北京世园会纪念银章大全40gx3, 1380.00,4140.00
-(002002)中国经典钱币套装x1, 1500.00,1500.00
-(002003)中国银象棋32gx2, 2200.00,4400.00
+(001001)世园会五十国钱币册x2, 998.00, 1996.00
+(001002)2019北京世园会纪念银章大全40gx3, 1380.00, 4140.00
+(002002)中国经典钱币套装x1, 1500.00, 1500.00
+(002003)中国银象棋32gx2, 2200.00, 4400.00
 合计：12036.00
 
 优惠清单：#如果有优惠，则打印
@@ -28,7 +28,7 @@ import java.util.List;
 
 应收合计：9468.00
 收款：
- 9折打折券 x 1
+ 9折券
  账户余额：9408.00元
 
 客户等级与积分：#每一项有变化时才打印
@@ -54,6 +54,7 @@ public class OrderRepresentation {
     private BigDecimal totalDiscountPrice;
     private BigDecimal receivables;
     private List<PaymentRepresentation> payments;
+    private List<String> discountCards;
     private static final DecimalFormat MONEY_FORMAT = new DecimalFormat("0.00");
 
     /**
@@ -71,12 +72,13 @@ public class OrderRepresentation {
      * @param totalDiscountPrice    优惠总金额
      * @param receivables           应收金额
      * @param payments              付款记录
+     * @param discountCards         付款使用的打折券
      */
     public OrderRepresentation(String orderId, Date createTime,
                                String memberNo, String memberName, String oldMemberType, String newMemberType, int memberPointsIncreased, int memberPoints,
                                List<OrderItemRepresentation> orderItems,
                                BigDecimal totalPrice, List<DiscountItemRepresentation> discounts, BigDecimal totalDiscountPrice,
-                               BigDecimal receivables, List<PaymentRepresentation> payments) {
+                               BigDecimal receivables, List<PaymentRepresentation> payments, List<String> discountCards) {
         this.orderId = orderId;
         this.createTime = createTime;
         this.memberNo = memberNo;
@@ -91,6 +93,7 @@ public class OrderRepresentation {
         this.totalDiscountPrice = totalDiscountPrice == null ? BigDecimal.ZERO : totalDiscountPrice;
         this.receivables = receivables == null ? BigDecimal.ZERO : receivables;
         this.payments = payments == null ? new ArrayList<PaymentRepresentation>() : payments;
+        this.discountCards = discountCards;
     }
 
     @Override
@@ -144,8 +147,8 @@ public class OrderRepresentation {
     private String getReportTitle() {
         String reportTitle = "方鼎银行贵金属购买凭证\n" +
                 "\n" +
-                "销售单号：%s 日期：%s \n" +
-                "客户卡号：%s 会员姓名：%s 客户等级：%s 累计积分：%d \n" +
+                "销售单号：%s 日期：%s\n" +
+                "客户卡号：%s 会员姓名：%s 客户等级：%s 累计积分：%d\n" +
                 "\n" +
                 "商品及数量           单价         金额\n";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -156,7 +159,7 @@ public class OrderRepresentation {
     private String getOrderDetail() {
         StringBuilder result = new StringBuilder();
         for (OrderItemRepresentation item : items) {
-            result.append(String.format("(%s)%sx%s %s, %s\n",
+            result.append(String.format("(%s)%sx%s, %s, %s\n",
                     item.getProductNo(),
                     item.getProductName(),
                     item.getAmount().toString(),
@@ -183,6 +186,11 @@ public class OrderRepresentation {
 
     private String getPayment() {
         StringBuilder result = new StringBuilder(String.format("\n应收合计：%s\n收款：\n", MONEY_FORMAT.format(receivables)));
+
+        for (String discountCard : discountCards) {
+            result.append(String.format(" %s\n", discountCard));
+        }
+
         for (PaymentRepresentation paymentRepresentation : payments) {
             result.append(String.format(" %s：%s\n",
                     paymentRepresentation.getType(),
@@ -199,11 +207,19 @@ public class OrderRepresentation {
         }
 
         result.append("\n客户等级与积分：\n");
-        result.append(String.format(" 新增积分：%d \n", memberPointsIncreased));
+        result.append(String.format(" 新增积分：%d\n", memberPointsIncreased));
         if (!newMemberType.equals(oldMemberType)) {
             result.append(String.format(" 恭喜您升级为%s客户！\n", newMemberType));
         }
 
         return result.toString();
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

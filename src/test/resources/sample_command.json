@@ -20,11 +20,11 @@
   ],
   "payments": [
     {
-      "type": "balance_of_account",
-      "amount": 9408.00
+      "type": "账户余额",
+      "amount": 11612.00
     }
   ],
   "discountCards": [
-    "discount_card_90"
+    "9折券"
   ]
 }

@@ -30,12 +30,16 @@ public class OrderRepresentationTest {
                 memberNo, memberName, oldMemberType, newMemberType,
                 memberPointsIncreased, memberPoints,
                 getOrderItems(), totalPrice,
-                getDiscountItems(), totalDiscountPrice, receivables, getPayments());
+                getDiscountItems(), totalDiscountPrice, receivables, getPayments(), getDiscountCards());
         String actualPrintResult = orderRepresentation.toString();
 
         String expectedResult = getExpectedTitle() + getExpectedBody();
 
         Assert.assertEquals(expectedResult, actualPrintResult);
+    }
+
+    private List<String> getDiscountCards() {
+        return Arrays.asList("9折券");
     }
 
     private List<OrderItemRepresentation> getOrderItems() {
@@ -58,16 +62,16 @@ public class OrderRepresentationTest {
 
     private String getExpectedTitle() {
         return String.format("方鼎银行贵金属购买凭证\n\n" +
-                        "销售单号：%s 日期：%s \n" +
-                        "客户卡号：%s 会员姓名：%s 客户等级：%s 累计积分：%d \n",
+                        "销售单号：%s 日期：%s\n" +
+                        "客户卡号：%s 会员姓名：%s 客户等级：%s 累计积分：%d\n",
                 orderId, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createTime),
                 memberNo, memberName, newMemberType, memberPoints);
     }
 
     private String getExpectedBody() {
         return "\n商品及数量           单价         金额\n" +
-                "(0001)AAAx2 101.10, 202.20\n" +
-                "(0002)BBBx2 101.10, 202.20\n" +
+                "(0001)AAAx2, 101.10, 202.20\n" +
+                "(0002)BBBx2, 101.10, 202.20\n" +
                 "合计：404.40\n" +
                 "\n" +
                 "优惠清单：\n" +
@@ -77,9 +81,10 @@ public class OrderRepresentationTest {
                 "\n" +
                 "应收合计：384.40\n" +
                 "收款：\n" +
+                " 9折券\n" +
                 " 账户余额：184.40\n\n" +
                 "客户等级与积分：\n" +
-                " 新增积分：2 \n" +
+                " 新增积分：2\n" +
                 " 恭喜您升级为金卡客户！\n";
     }
 }

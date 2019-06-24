@@ -23,11 +23,11 @@ public class OrderCommandTest {
 
 
         assertEquals(1, command.getPayments().size());
-        assertEquals("balance_of_account", command.getPayments().get(0).type);
-        assertEquals(9408, command.getPayments().get(0).amount.intValue());
+        assertEquals("账户余额", command.getPayments().get(0).type);
+        assertEquals(11612, command.getPayments().get(0).amount.intValue());
 
         assertEquals(1, command.getDiscounts().size());
-        assertEquals("discount_card_90", command.getDiscounts().get(0));
+        assertEquals("9折券", command.getDiscounts().get(0));
 
     }
 

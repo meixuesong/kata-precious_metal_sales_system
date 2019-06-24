@@ -21,7 +21,7 @@ public class FileReader {
             String s;
             StringBuilder sb = new StringBuilder();
             while ((s = br.readLine()) != null)
-                sb.append(s + "");
+                sb.append(s + "\n");
 
             result = sb.toString();
 

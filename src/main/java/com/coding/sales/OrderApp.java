@@ -8,13 +8,17 @@ import com.coding.sales.representation.OrderRepresentation;
  * 用于打印销售凭证
  */
 public class OrderApp {
+
     public OrderRepresentation checkout(String orderCommand) {
+        OrderCommand command = OrderCommand.from(orderCommand);
+
+        return checkout(command);
+    }
+
+    OrderRepresentation checkout(OrderCommand command) {
         OrderRepresentation result = null;
 
-        OrderCommand command = OrderCommand.from(orderCommand);
-//        command.getItems().get(0).
         //TODO: 请完成需求指定的功能
-
 
         return result;
     }
