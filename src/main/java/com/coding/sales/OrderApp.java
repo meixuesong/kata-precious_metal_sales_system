@@ -11,15 +11,16 @@ public class OrderApp {
 
     public String checkout(String orderCommand) {
         OrderCommand command = OrderCommand.from(orderCommand);
-
-        return checkout(command);
+        OrderRepresentation result = checkout(command);
+        
+        return result.toString();
     }
 
-    String checkout(OrderCommand command) {
+    OrderRepresentation checkout(OrderCommand command) {
         OrderRepresentation result = null;
 
         //TODO: 请完成需求指定的功能
 
-        return result.toString();
+        return result;
     }
 }
