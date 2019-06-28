@@ -1,7 +1,7 @@
 package com.coding.sales;
 
-import com.coding.sales.command.OrderCommand;
-import com.coding.sales.representation.OrderRepresentation;
+import com.coding.sales.input.OrderCommand;
+import com.coding.sales.output.OrderRepresentation;
 
 /**
  * 销售系统的主入口
@@ -9,17 +9,17 @@ import com.coding.sales.representation.OrderRepresentation;
  */
 public class OrderApp {
 
-    public OrderRepresentation checkout(String orderCommand) {
+    public String checkout(String orderCommand) {
         OrderCommand command = OrderCommand.from(orderCommand);
 
         return checkout(command);
     }
 
-    OrderRepresentation checkout(OrderCommand command) {
+    String checkout(OrderCommand command) {
         OrderRepresentation result = null;
 
         //TODO: 请完成需求指定的功能
 
-        return result;
+        return result.toString();
     }
 }

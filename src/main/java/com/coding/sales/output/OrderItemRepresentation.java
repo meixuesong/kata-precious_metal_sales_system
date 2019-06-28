@@ -1,4 +1,4 @@
-package com.coding.sales.representation;
+package com.coding.sales.output;
 
 import java.math.BigDecimal;
 

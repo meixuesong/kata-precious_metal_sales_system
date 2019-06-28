@@ -1,4 +1,4 @@
-package com.coding.sales.command;
+package com.coding.sales.input;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -1,21 +1,20 @@
 package com.coding.sales;
 
-import com.coding.sales.representation.OrderRepresentation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class OrderAppTest {
+
+    public static final String ORDER_DATE = "日期：";
+    public static final String ORDER_ID = "销售单号：";
 
     @Parameterized.Parameters
     public static Collection<Object[]> parameters() {
@@ -38,37 +37,61 @@ public class OrderAppTest {
     public void should_checkout_order() {
         String orderCommand = FileReader.readFromFile(getResourceFilePath(commandFileName));
         OrderApp app = new OrderApp();
-        OrderRepresentation actualRepresentation = app.checkout(orderCommand);
+        String actualResult = app.checkout(orderCommand);
 
-        String expectedRepresentation = FileReader.readFromFile(getResourceFilePath(expectedResultFileName));
+        String expectedResult = FileReader.readFromFile(getResourceFilePath(expectedResultFileName));
 
-        replaceOrderIdandCreateTime(actualRepresentation, expectedRepresentation);
-        assertEquals(expectedRepresentation, actualRepresentation.toString());
+        actualResult = replaceOrderIDandCreateTime(expectedResult, actualResult);
+        assertEquals(expectedResult, actualResult);
     }
 
-    private void replaceOrderIdandCreateTime(OrderRepresentation actualRepresentation, String expectedRepresentation) {
-        Date orderDate = findOrderDate(expectedRepresentation);
-        actualRepresentation.setCreateTime(orderDate);
-        actualRepresentation.setOrderId("0000001");
+    private String replaceOrderIDandCreateTime(String source, String target) {
+        String sourceDate = findOrderDate(source);
+        String targetDate = findOrderDate(target);
+        String sourceOrderId = findOrderId(source);
+        String targetOrderId = findOrderId(target);
+
+        String result = target.replace(ORDER_DATE + targetDate, ORDER_DATE + sourceDate);
+        result = result.replace(ORDER_ID + targetOrderId, ORDER_ID + sourceOrderId);
+
+        return result;
     }
 
-    private Date findOrderDate(String expectedRepresentation) {
-        String[] lines = expectedRepresentation.split("\n");
-        String dateLine = lines[2];
+    private String findOrderId(String representation) {
+        String line = getOrderIdAndDateLine(representation);
 
-        String datePrefix = "日期：";
-        int i = dateLine.indexOf(datePrefix);
-        if (i <= 0) {
-            throw new RuntimeException("未找到期望的订单创建时间");
+        String prefix = ORDER_ID;
+        int i = line.indexOf(prefix);
+        if (i < 0) {
+            throw new RuntimeException("未找到销售单号");
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date = dateLine.substring(i + datePrefix.length());
-        try {
-            return dateFormat.parse(date);
-        } catch (ParseException e) {
-            throw new RuntimeException("未找到期望的订单创建时间");
+        String suffix = " " + ORDER_DATE;
+        int j = line.indexOf(suffix);
+        if (j < 0) {
+            throw new RuntimeException("未找到销售单号");
         }
+
+        String orderId = line.substring(i + prefix.length(), j);
+        return orderId;
+    }
+
+    private String findOrderDate(String representation) {
+        String line = getOrderIdAndDateLine(representation);
+
+        String datePrefix = ORDER_DATE;
+        int i = line.indexOf(datePrefix);
+        if (i < 0) {
+            throw new RuntimeException("未找到订单创建时间");
+        }
+
+        String date = line.substring(i + datePrefix.length());
+        return date;
+    }
+
+    private String getOrderIdAndDateLine(String representation) {
+        String[] lines = representation.split("\n");
+        return lines[2];
     }
 
     private String getResourceFilePath(String fileName) {

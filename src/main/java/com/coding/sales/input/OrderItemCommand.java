@@ -1,4 +1,4 @@
-package com.coding.sales.command;
+package com.coding.sales.input;
 
 import java.math.BigDecimal;
 
