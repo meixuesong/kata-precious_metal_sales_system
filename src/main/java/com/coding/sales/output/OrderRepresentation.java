@@ -214,12 +214,4 @@ public class OrderRepresentation {
 
         return result.toString();
     }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
 }
