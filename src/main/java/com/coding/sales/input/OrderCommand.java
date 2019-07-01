@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderCommand {
+    private String orderId;
+    private String createTime;
     private String memberId;
     private List<OrderItemCommand> items;
     private List<PaymentCommand> payments;
@@ -16,6 +18,8 @@ public class OrderCommand {
         JSONObject jsonObject = new JSONObject(orderCommand);
 
         OrderCommand command = new OrderCommand(
+                jsonObject.getString("orderId"),
+                jsonObject.getString("createTime"),
                 jsonObject.getString("memberId"),
                 parseItems(jsonObject.getJSONArray("items")),
                 parsePayments(jsonObject.getJSONArray("payments")),
@@ -25,7 +29,9 @@ public class OrderCommand {
         return command;
     }
 
-    public OrderCommand(String memberId, List<OrderItemCommand> items, List<PaymentCommand> payments, List<String> discounts) {
+    public OrderCommand(String orderId, String createTime, String memberId, List<OrderItemCommand> items, List<PaymentCommand> payments, List<String> discounts) {
+        this.orderId = orderId;
+        this.createTime = createTime;
         this.memberId = memberId;
         this.items = items;
         this.payments = payments;
@@ -34,6 +40,14 @@ public class OrderCommand {
 
     public String getMemberId() {
         return memberId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
     }
 
     public List<OrderItemCommand> getItems() {

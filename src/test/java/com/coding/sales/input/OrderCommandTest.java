@@ -4,8 +4,10 @@ import com.coding.sales.FileReader;
 import org.junit.Test;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class OrderCommandTest {
     @Test
@@ -16,6 +18,8 @@ public class OrderCommandTest {
         OrderCommand command = OrderCommand.from(commandString);
 
         assertEquals("6236609999", command.getMemberId());
+        assertEquals("0000001", command.getOrderId());
+        assertEquals("2019-07-02 15:00:00", command.getCreateTime());
 
         assertEquals(4, command.getItems().size());
         assertEquals("001002", command.getItems().get(1).product);
@@ -23,8 +27,8 @@ public class OrderCommandTest {
 
 
         assertEquals(1, command.getPayments().size());
-        assertEquals("账户余额", command.getPayments().get(0).type);
-        assertEquals(11612, command.getPayments().get(0).amount.intValue());
+        assertEquals("余额支付", command.getPayments().get(0).type);
+        assertTrue(command.getPayments().get(0).amount.compareTo(BigDecimal.valueOf(9860.00)) == 0);
 
         assertEquals(1, command.getDiscounts().size());
         assertEquals("9折券", command.getDiscounts().get(0));
