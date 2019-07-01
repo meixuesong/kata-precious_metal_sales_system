@@ -15,13 +15,13 @@
     },
     {
       "product": "002003",
-      "amount": 2
+      "amount": 5
     }
   ],
   "payments": [
     {
-      "type": "账户余额",
-      "amount": 11612.00
+      "type": "余额支付",
+      "amount": 9860.00
     }
   ],
   "discountCards": [
