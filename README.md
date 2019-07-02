@@ -136,6 +136,8 @@
 
 **请编写一个程序用于打印销售凭证，输入为JSON文件，输出为上述格式的待打印销售凭证。**
 
+[JavaScript版本项目](https://github.com/xbl/kata-precious_metal_sales_system_js)
+
 此项目的Java版本已经实现了部分代码，结构如下：
 
 ![](https://mxs-1256616343.cos.ap-chengdu.myqcloud.com/1562031733.96clipboardimage.jpg)
@@ -163,3 +165,4 @@ java -jar order-app-jar-with-dependencies.jar sample_command.json order_receipt.
 * 不考虑并发
 
 如果你需要使用Java 8，可以将`pom.xml`中的`maven.compiler.source`和`maven.compiler.target` 改成1.8，然后重新导入项目或者刷新项目。
+
