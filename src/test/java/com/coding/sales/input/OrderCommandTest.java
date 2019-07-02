@@ -1,6 +1,6 @@
 package com.coding.sales.input;
 
-import com.coding.sales.FileReader;
+import com.coding.sales.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,7 +13,7 @@ public class OrderCommandTest {
     @Test
     public void should_parse_command() {
         String absolutePath = getResourceFilePath("sample_command.json");
-        String commandString = FileReader.readFromFile(absolutePath);
+        String commandString = FileUtils.readFromFile(absolutePath);
 
         OrderCommand command = OrderCommand.from(commandString);
 

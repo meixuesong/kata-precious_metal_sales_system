@@ -1,4 +1,5 @@
 # 贵金属销售系统需求
+
 ## 简述
 方鼎银行是一家中型城市商业银行，现在委托你开发一套贵金属销售系统，需求如下：
 
@@ -99,7 +100,7 @@
 马丁在付款时使用了：
 
 * 1张9折券
-* 其它采用账户余额支付
+* 其它采用 `余额支付` 
 
 客户凭证打印如下：（#号之后的内容为说明，不打印，同时打印的客户等级、积分等均为该交易后的实时信息）
 
@@ -132,48 +133,27 @@
 ```
 
 ## 程序要求
-请编写一个程序用于打印销售凭证，API如下：
 
-``` 
-String checkout(String orderCommand): 
-    * 输出：返回待打印的字符串
-    * 输入：OrderCommand是一个JSON字符串，内容如下：
+**请编写一个程序用于打印销售凭证，输入为JSON文件，输出为上述格式的待打印销售凭证。**
 
-{
-  "orderId": "0000001",
-  "memberId": "6236609999",
-  "createTime": "2019-07-02 15:00:00",
-  "items": [
-    {
-      "product": "001001",
-      "amount": 2
-    },
-    {
-      "product": "001002",
-      "amount": 3
-    },
-    {
-      "product": "002002",
-      "amount": 1
-    },
-    {
-      "product": "002003",
-      "amount": 5
-    }
-  ],
-  "payments": [
-    {
-      "type": "余额支付",
-      "amount": 9860.00
-    }
-  ],
-  "discountCards": [
-    "9折券"
-  ]
-}
+此项目的Java版本已经实现了部分代码，结构如下：
+
+![](https://mxs-1256616343.cos.ap-chengdu.myqcloud.com/1562031733.96clipboardimage.jpg)
+
+实线部分是已经提供的代码，你需要实现的虚线部分内容。当然实线部分的代码你也可以按需修改。程序的入口为OrderApp类。
+
+程序已经给出了一个上例的测试代码，你可以运行测试，以验证程序的正确性。请注意，本项目只提供了一个简单的冒烟测试。如有必要，请补充其它测试用例。
+
+如果想通过命令行运行，可以执行以下命令：
+
 ```
-
-程序已经给出了一个上例的测试代码，用于验证程序的正确性。
+#运行测试
+mvn test
+#打包
+mvn clean compile assembly:single
+#运行App，请调整相应文件的路径
+java -jar order-app-jar-with-dependencies.jar sample_command.json order_receipt.txt
+```
 
 请注意，本程序只需要打印销售凭证，因此假设：
 
@@ -182,5 +162,4 @@ String checkout(String orderCommand):
 * 不使用数据库
 * 不考虑并发
 
-
-如果你本地是Java 8，可以将`pom.xml`中的`maven.compiler.source`和`maven.compiler.target` 改成1.8
+如果你需要使用Java 8，可以将`pom.xml`中的`maven.compiler.source`和`maven.compiler.target` 改成1.8，然后重新导入项目或者刷新项目。

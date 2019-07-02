@@ -1,12 +1,14 @@
 package com.coding.sales;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class FileReader {
+public class FileUtils {
     public static String readFromFile(String filePath) {
         String result = "";
         InputStream is = null;
@@ -42,5 +44,22 @@ public class FileReader {
         }
 
         return result;
+    }
+
+    public static void writeToFile(String content, String filePath) {
+        try {
+            FileWriter writer = new FileWriter(filePath, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+            String[] lines = content.split("\n");
+            for (String line : lines) {
+                bufferedWriter.write(line);
+                bufferedWriter.newLine();
+            }
+
+            bufferedWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
