@@ -146,7 +146,7 @@ public class OrderRepresentation {
     private String getDiscount() {
         StringBuilder result = new StringBuilder("\n优惠清单：\n");
         for (DiscountItemRepresentation discount : discounts) {
-            result.append(String.format(" (%s)%s: -%s\n",
+            result.append(String.format("(%s)%s: -%s\n",
                     discount.getProductNo(),
                     discount.getProductName(),
                     MONEY_FORMAT.format(discount.getDiscount())));
