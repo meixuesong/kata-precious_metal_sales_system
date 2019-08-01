@@ -33,10 +33,9 @@ public class OrderAppUnitTest {
     @Test
     public void should_support_empty_order() {
         OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001", null, null,
+                "2019-01-01 10:00:00", "0001", new ArrayList<OrderItemCommand>(), null,
                 null);
 
-        productRepository = new ProductRepository();
         OrderFactory factory = new OrderFactory(repository, productRepository);
         Order order = factory.createOrder(command);
 
@@ -47,7 +46,7 @@ public class OrderAppUnitTest {
     @Test
     public void should_support_empty_order_print() {
         OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001", null, null,
+                "2019-01-01 10:00:00", "0001", new ArrayList<OrderItemCommand>(), null,
                 null);
 
 
