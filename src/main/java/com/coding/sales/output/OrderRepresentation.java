@@ -1,6 +1,7 @@
 package com.coding.sales.output;
 
 import com.coding.sales.Order;
+import com.coding.sales.OrderItem;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -79,13 +80,25 @@ public class OrderRepresentation {
         this.newMemberType = order.getNewMemberType().toString();
         this.memberPointsIncreased = order.getMemberPointsIncreased();
         this.memberPoints = order.getMember().getPoints();
-        this.items = new ArrayList<OrderItemRepresentation>();
+        this.items = getOrderItemRepresentations(order);
         this.totalPrice = order.getTotalPrice();
         this.discounts = new ArrayList<DiscountItemRepresentation>();
         this.totalDiscountPrice = BigDecimal.ZERO;
         this.receivables = order.getReceivables();
         this.payments = new ArrayList<PaymentRepresentation>();
         this.discountCards = new ArrayList<String>();
+    }
+
+    private ArrayList<OrderItemRepresentation> getOrderItemRepresentations(Order order) {
+        ArrayList<OrderItemRepresentation> items = new ArrayList<OrderItemRepresentation>();
+        for (OrderItem item : order.getItems()) {
+            items.add(new OrderItemRepresentation(item.getProduct().getId(),
+                    item.getProduct().getName(),
+                    item.getProduct().getPrice(),
+                    item.getAmount(),
+                    item.getSubTotal()));
+        }
+        return items;
     }
 
     @Override
