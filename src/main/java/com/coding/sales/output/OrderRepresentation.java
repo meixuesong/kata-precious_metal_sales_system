@@ -1,5 +1,7 @@
 package com.coding.sales.output;
 
+import com.coding.sales.Order;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -68,6 +70,24 @@ public class OrderRepresentation {
         this.discountCards = discountCards;
     }
 
+    public OrderRepresentation(Order order) {
+        this.orderId = order.getId();
+        this.createTime = order.getCreateTime();
+        this.memberNo = order.getMember().getNo();
+        this.memberName = order.getMember().getName();
+        this.oldMemberType = order.getOldMemberType().toString();
+        this.newMemberType = order.getNewMemberType().toString();
+        this.memberPointsIncreased = order.getMemberPointsIncreased();
+        this.memberPoints = order.getMember().getPoints();
+        this.items = new ArrayList<OrderItemRepresentation>();
+        this.totalPrice = order.getTotalPrice();
+        this.discounts = new ArrayList<DiscountItemRepresentation>();
+        this.totalDiscountPrice = BigDecimal.ZERO;
+        this.receivables = order.getReceivables();
+        this.payments = new ArrayList<PaymentRepresentation>();
+        this.discountCards = new ArrayList<String>();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,6 +134,14 @@ public class OrderRepresentation {
     @Override
     public String toString() {
         return getReportTitle() + getOrderDetail() + getDiscount() + getPayment() + getMemberChangeInfo();
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public BigDecimal getReceivables() {
+        return receivables;
     }
 
     private String getReportTitle() {
