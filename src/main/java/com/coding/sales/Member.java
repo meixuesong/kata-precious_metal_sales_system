@@ -34,6 +34,9 @@ public class Member {
         int increasedPoints = getType().getRate().multiply(new BigDecimal(receivables.intValue())).intValue();
         points += increasedPoints;
 
+        this.type = MemberType.getMemberType(this.points);
+
         return points;
     }
+
 }

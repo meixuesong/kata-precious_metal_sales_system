@@ -11,7 +11,6 @@ public class Order {
     private BigDecimal totalPrice = BigDecimal.ZERO;
     private BigDecimal receivables = BigDecimal.ZERO;
     private MemberType oldMemberType;
-    private MemberType newMemberType;
     private int memberPointsIncreased;
     private List<OrderItem> items;
 
@@ -20,7 +19,6 @@ public class Order {
         this.createTime = createTime;
         this.member = member;
         this.oldMemberType = member.getType();
-        this.newMemberType = member.getType();
         this.items = items;
     }
 
@@ -69,11 +67,10 @@ public class Order {
     }
 
     public MemberType getNewMemberType() {
-        return newMemberType;
+        return member.getType();
     }
 
     public void setNewMemberType(MemberType newMemberType) {
-        this.newMemberType = newMemberType;
     }
 
     public int getMemberPointsIncreased() {

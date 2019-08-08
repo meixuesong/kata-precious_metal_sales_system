@@ -231,4 +231,8 @@ public class OrderRepresentation {
     public int getMemberPointsIncreased() {
         return memberPointsIncreased;
     }
+
+    public String getNewMemberType() {
+        return newMemberType;
+    }
 }

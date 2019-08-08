@@ -98,4 +98,23 @@ public class OrderAppUnitTest {
 
         assertEquals(100, representation.getMemberPointsIncreased());
     }
+
+    @Test
+    public void should_increase_member_type() {
+        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
+        items.add(new OrderItemCommand("001", new BigDecimal("1000")));
+
+        OrderCommand command = new OrderCommand("0000001",
+                "2019-01-01 10:00:00", "0001",
+                items,
+                null,
+                null);
+        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
+        Order order = factory.createOrder(command);
+        order.checkout();
+
+        OrderRepresentation representation = new OrderRepresentation(order);
+
+        assertEquals(MemberType.GOLD.toString(), representation.getNewMemberType());
+    }
 }
