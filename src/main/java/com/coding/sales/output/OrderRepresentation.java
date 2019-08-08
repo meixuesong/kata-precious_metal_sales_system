@@ -227,4 +227,8 @@ public class OrderRepresentation {
 
         return result.toString();
     }
+
+    public int getMemberPointsIncreased() {
+        return memberPointsIncreased;
+    }
 }

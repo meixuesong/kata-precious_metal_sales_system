@@ -19,7 +19,6 @@ public class OrderFactory {
     }
 
     public Order createOrder(OrderCommand command) {
-
         Member member = memberRepository.findById(command.getMemberId());
 
         Order order = new Order(command.getOrderId(),
@@ -36,6 +35,7 @@ public class OrderFactory {
             Product product = productRepository.findById(item.getProduct());
             orderItems.add(new OrderItem(product, item.getAmount()));
         }
+
         return orderItems;
     }
 

@@ -1,14 +1,15 @@
 package com.coding.sales;
 
+import java.math.BigDecimal;
+
 public class Member {
-    private final String id;
     private String no;
     private String name;
     private int points;
     private MemberType type;
 
-    public Member(String id, String name, MemberType type) {
-        this.id = id;
+    public Member(String no, String name, MemberType type) {
+        this.no = no;
         this.name = name;
         this.type = type;
     }
@@ -27,5 +28,12 @@ public class Member {
 
     public MemberType getType() {
         return type;
+    }
+
+    int pay(BigDecimal receivables) {
+        int increasedPoints = getType().getRate().multiply(new BigDecimal(receivables.intValue())).intValue();
+        points += increasedPoints;
+
+        return points;
     }
 }

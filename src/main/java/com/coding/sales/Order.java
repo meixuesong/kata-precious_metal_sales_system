@@ -22,7 +22,14 @@ public class Order {
         this.oldMemberType = member.getType();
         this.newMemberType = member.getType();
         this.items = items;
+    }
 
+    public void checkout() {
+        calcTotalPrice(this.items);
+        this.memberPointsIncreased = this.member.pay(this.receivables);
+    }
+
+    private void calcTotalPrice(List<OrderItem> items) {
         for (OrderItem item : items) {
             totalPrice = totalPrice.add(item.getSubTotal());
         }
