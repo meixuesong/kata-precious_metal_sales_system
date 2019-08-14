@@ -3,7 +3,8 @@ package com.coding.sales;
 import java.math.BigDecimal;
 
 public enum Discount implements Promotion{
-    PERCENT_90("9折券", new BigDecimal("0.9")), PERCENT_95("95折券", new BigDecimal("0.95"));
+    PERCENT_90("9折券", new BigDecimal("0.9")),
+    PERCENT_95("95折券", new BigDecimal("0.95"));
 
     private String value;
     private BigDecimal discountRate;

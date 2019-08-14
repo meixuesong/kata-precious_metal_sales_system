@@ -38,7 +38,6 @@ public class ProductRepository {
 
         Product product5 = new Product("002003", "中国银象棋12g", "698.00");
         products.put("002003", product5);
-        //参与满减：每满3000元减350, 每满2000减30，每满1000减10 可使用9折打折券
         product5.addDiscount(Discount.PERCENT_90);
         product5.addMoneyOff(MoneyOff.OFF_350_PER_3000);
         product5.addMoneyOff(MoneyOff.OFF_30_PER_2000);

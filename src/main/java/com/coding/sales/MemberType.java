@@ -8,10 +8,10 @@ public enum MemberType {
     PLATINUM("白金卡", new BigDecimal("1.8"), 50000, 99999),
     DIAMOND("钻石卡", new BigDecimal("2.0"), 100000, Integer.MAX_VALUE);
 
-    String name;
+    private String name;
     private BigDecimal rate;
-    int minPoints;
-    int maxPoints;
+    private int minPoints;
+    private int maxPoints;
 
     MemberType(String name, BigDecimal rate, int minPoints, int maxPoints) {
         this.name = name;
@@ -40,7 +40,7 @@ public enum MemberType {
     }
 
 
-    static MemberType getMemberType(int points) {
+    public static MemberType getMemberType(int points) {
         for (MemberType value : MemberType.values()) {
             if (points >= value.minPoints && points <= value.maxPoints) {
                 return value;

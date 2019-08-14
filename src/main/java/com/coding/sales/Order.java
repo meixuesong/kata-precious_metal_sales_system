@@ -15,11 +15,6 @@ public class Order {
     private int memberPointsIncreased;
     private List<OrderItem> items;
     private List<Payment> payments;
-
-    public List<Discount> getDiscounts() {
-        return discounts;
-    }
-
     private List<Discount> discounts;
 
 
@@ -31,10 +26,6 @@ public class Order {
         this.items = items;
         this.discounts = discounts;
         this.payments = payments;
-    }
-
-    public List<Payment> getPayments() {
-        return payments;
     }
 
     public void checkout() {
@@ -102,8 +93,16 @@ public class Order {
         return id;
     }
 
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
+
     public Date getCreateTime() {
         return createTime;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
     }
 
     public Member getMember() {
@@ -134,5 +133,4 @@ public class Order {
     public BigDecimal getTotalDiscountPrice() {
         return totalDiscountPrice;
     }
-
 }

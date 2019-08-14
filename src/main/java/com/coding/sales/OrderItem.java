@@ -27,10 +27,6 @@ public class OrderItem {
         return subTotal;
     }
 
-    public BigDecimal getReceivables() {
-        return subTotal.subtract(discount);
-    }
-
     public BigDecimal getDiscount() {
         return this.discount;
     }

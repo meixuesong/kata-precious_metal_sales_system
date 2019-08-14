@@ -7,10 +7,7 @@ public enum MoneyOff implements Promotion {
         @Override
         public void calcPromotion(OrderItem item) {
             if (item.getProduct().getMoneyOffs().contains(this)) {
-                int countOf3000 = item.getSubTotal().divide(new BigDecimal("3000"), BigDecimal.ROUND_FLOOR).intValue();
-                BigDecimal money = new BigDecimal("350").multiply(new BigDecimal(countOf3000));
-
-                item.setDiscount(money);
+                calcMoneyOffByTotalPrice(item, "3000", "350");
             }
         }
     },
@@ -18,10 +15,7 @@ public enum MoneyOff implements Promotion {
         @Override
         public void calcPromotion(OrderItem item) {
             if (item.getProduct().getMoneyOffs().contains(this)) {
-                int countOf2000 = item.getSubTotal().divide(new BigDecimal("2000"), BigDecimal.ROUND_FLOOR).intValue();
-                BigDecimal money = new BigDecimal("30").multiply(new BigDecimal(countOf2000));
-
-                item.setDiscount(money);
+                calcMoneyOffByTotalPrice(item, "2000", "30");
             }
         }
     },
@@ -29,10 +23,7 @@ public enum MoneyOff implements Promotion {
         @Override
         public void calcPromotion(OrderItem item) {
             if (item.getProduct().getMoneyOffs().contains(this)) {
-                int countOf1000 = item.getSubTotal().divide(new BigDecimal("1000"), BigDecimal.ROUND_FLOOR).intValue();
-                BigDecimal money = new BigDecimal("10").multiply(new BigDecimal(countOf1000));
-
-                item.setDiscount(money);
+                calcMoneyOffByTotalPrice(item, "1000", "10");
             }
         }
     },
@@ -40,9 +31,7 @@ public enum MoneyOff implements Promotion {
         @Override
         public void calcPromotion(OrderItem item) {
             if (item.getProduct().getMoneyOffs().contains(this)) {
-                if (item.getAmount().compareTo(new BigDecimal("3")) >= 0) {
-                    item.setDiscount(item.getProduct().getPrice().divide(new BigDecimal("2"), BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP));
-                }
+                calcMoneyOffByAmount(item, "3", "0.5");
             }
         }
     },
@@ -51,9 +40,22 @@ public enum MoneyOff implements Promotion {
         public void calcPromotion(OrderItem item) {
             if (item.getProduct().getMoneyOffs().contains(this)) {
                 if (item.getAmount().compareTo(new BigDecimal("4")) >= 0) {
-                    item.setDiscount(item.getProduct().getPrice());
+                    calcMoneyOffByAmount(item, "4", "1");
                 }
             }
         }
     };
+
+    private static void calcMoneyOffByAmount(OrderItem item, String productAmount, String offRate) {
+        if (item.getAmount().compareTo(new BigDecimal(productAmount)) >= 0) {
+            item.setDiscount(item.getProduct().getPrice().multiply(new BigDecimal(offRate)).setScale(2, BigDecimal.ROUND_HALF_UP));
+        }
+    }
+
+    private static void calcMoneyOffByTotalPrice(OrderItem item, String perMoney, String moneyOff) {
+        int count = item.getSubTotal().divide(new BigDecimal(perMoney), BigDecimal.ROUND_FLOOR).intValue();
+        BigDecimal money = new BigDecimal(moneyOff).multiply(new BigDecimal(count)).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+        item.setDiscount(money);
+    }
 }
