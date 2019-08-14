@@ -1,7 +1,11 @@
 package com.coding.sales;
 
 import com.coding.sales.input.OrderCommand;
+import com.coding.sales.member.MemberRepository;
+import com.coding.sales.order.Order;
+import com.coding.sales.order.OrderFactory;
 import com.coding.sales.output.OrderRepresentation;
+import com.coding.sales.product.ProductRepository;
 
 /**
  * 销售系统的主入口

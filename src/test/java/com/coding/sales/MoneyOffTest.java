@@ -1,5 +1,8 @@
 package com.coding.sales;
 
+import com.coding.sales.order.MoneyOff;
+import com.coding.sales.order.OrderItem;
+import com.coding.sales.product.Product;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.junit.runner.RunWith;

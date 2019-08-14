@@ -1,4 +1,7 @@
-package com.coding.sales;
+package com.coding.sales.product;
+
+import com.coding.sales.order.Discount;
+import com.coding.sales.order.MoneyOff;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,7 @@
-package com.coding.sales;
+package com.coding.sales.order;
+
+import com.coding.sales.member.Member;
+import com.coding.sales.member.MemberType;
 
 import java.math.BigDecimal;
 import java.util.Date;

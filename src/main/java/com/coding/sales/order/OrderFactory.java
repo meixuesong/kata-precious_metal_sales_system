@@ -1,8 +1,12 @@
-package com.coding.sales;
+package com.coding.sales.order;
 
 import com.coding.sales.input.OrderCommand;
 import com.coding.sales.input.OrderItemCommand;
 import com.coding.sales.input.PaymentCommand;
+import com.coding.sales.member.Member;
+import com.coding.sales.member.MemberRepository;
+import com.coding.sales.product.Product;
+import com.coding.sales.product.ProductRepository;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

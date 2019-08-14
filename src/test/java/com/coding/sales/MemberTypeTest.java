@@ -1,5 +1,6 @@
 package com.coding.sales;
 
+import com.coding.sales.member.MemberType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

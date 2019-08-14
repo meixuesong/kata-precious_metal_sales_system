@@ -1,7 +1,8 @@
-package com.coding.sales;
+package com.coding.sales.order;
+
+import com.coding.sales.product.Product;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class OrderItem {
     private Product product;

@@ -1,9 +1,9 @@
 package com.coding.sales.output;
 
-import com.coding.sales.Discount;
-import com.coding.sales.Order;
-import com.coding.sales.OrderItem;
-import com.coding.sales.Payment;
+import com.coding.sales.order.Discount;
+import com.coding.sales.order.Order;
+import com.coding.sales.order.OrderItem;
+import com.coding.sales.order.Payment;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;

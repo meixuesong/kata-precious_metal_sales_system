@@ -1,4 +1,4 @@
-package com.coding.sales;
+package com.coding.sales.member;
 
 import java.util.HashMap;
 import java.util.Map;

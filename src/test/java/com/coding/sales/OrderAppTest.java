@@ -38,7 +38,6 @@ public class OrderAppTest {
                 {"promotion_command.json", "promotion_result.txt"},
                 //9 选择更优惠的打折或满减
                 {"promotion_discount_command.json", "promotion_discount_result.txt"},
-
         };
 
         return Arrays.asList(data);
