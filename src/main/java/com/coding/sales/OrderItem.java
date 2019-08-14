@@ -28,7 +28,7 @@ public class OrderItem {
     }
 
     public void calcDiscount(List<DISCOUNT> discounts) {
-        if (discounts.contains(DISCOUNT.PERCENT_90)) {
+        if (discounts.contains(DISCOUNT.PERCENT_90) && product.getDiscounts().contains(DISCOUNT.PERCENT_90)) {
             discount = product.getPrice().multiply(amount).multiply(
                     BigDecimal.ONE.subtract(DISCOUNT.PERCENT_90.getDiscountRate()));
         }
