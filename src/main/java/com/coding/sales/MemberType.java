@@ -20,6 +20,16 @@ public enum MemberType {
         this.maxPoints = maxPoints;
     }
 
+    public static MemberType from(String type) {
+        for (MemberType value : values()) {
+            if (value.name.equalsIgnoreCase(type)) {
+                return value;
+            }
+        }
+
+        throw new IllegalArgumentException("未知的会员类型");
+    }
+
     public BigDecimal getRate() {
         return rate;
     }

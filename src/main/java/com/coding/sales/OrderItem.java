@@ -36,6 +36,8 @@ public class OrderItem {
     }
 
     public void setDiscount(BigDecimal money) {
-        this.discount = money;
+        if (money.compareTo(discount) > 0) {
+            this.discount = money;
+        }
     }
 }

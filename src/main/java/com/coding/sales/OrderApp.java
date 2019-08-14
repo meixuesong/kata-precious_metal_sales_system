@@ -31,10 +31,14 @@ public class OrderApp {
     }
 
     OrderRepresentation checkout(OrderCommand command) {
-        OrderRepresentation result = null;
+        MemberRepository memberRepository = new MemberRepository();
+        ProductRepository productRepository = new ProductRepository();
+        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
+        Order order = factory.createOrder(command);
+        order.checkout();
 
-        //TODO: 请完成需求指定的功能
+        OrderRepresentation representation = new OrderRepresentation(order);
 
-        return result;
+        return representation;
     }
 }

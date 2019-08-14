@@ -1,7 +1,9 @@
 package com.coding.sales.output;
 
+import com.coding.sales.Discount;
 import com.coding.sales.Order;
 import com.coding.sales.OrderItem;
+import com.coding.sales.Payment;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -85,8 +87,24 @@ public class OrderRepresentation {
         this.discounts = getDiscountItemRepresentations(order);
         this.totalDiscountPrice = order.getTotalDiscountPrice();
         this.receivables = order.getReceivables();
-        this.payments = new ArrayList<PaymentRepresentation>();
-        this.discountCards = new ArrayList<String>();
+        this.payments = getPaymentRepresentations(order);
+        this.discountCards = getDiscountCards(order);
+    }
+
+    private ArrayList<PaymentRepresentation> getPaymentRepresentations(Order order) {
+        ArrayList<PaymentRepresentation> payments = new ArrayList<>();
+        for (Payment payment : order.getPayments()) {
+            payments.add(new PaymentRepresentation(payment.getType(), payment.getAmount()));
+        }
+        return payments;
+    }
+
+    private ArrayList<String> getDiscountCards(Order order) {
+        ArrayList<String> discountCards = new ArrayList<>();
+        for (Discount discount : order.getDiscounts()) {
+            discountCards.add(discount.toString());
+        }
+        return discountCards;
     }
 
     private ArrayList<DiscountItemRepresentation> getDiscountItemRepresentations(Order order) {

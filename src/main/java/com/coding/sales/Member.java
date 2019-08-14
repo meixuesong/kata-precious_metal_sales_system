@@ -14,6 +14,13 @@ public class Member {
         this.type = type;
     }
 
+    public Member(String no, String name, String type, String points) {
+        this.no = no;
+        this.name = name;
+        this.type = MemberType.from(type);
+        this.points = Integer.valueOf(points);
+    }
+
     public String getNo() {
         return no;
     }

@@ -2,6 +2,7 @@ package com.coding.sales;
 
 import com.coding.sales.input.OrderCommand;
 import com.coding.sales.input.OrderItemCommand;
+import com.coding.sales.input.PaymentCommand;
 import com.coding.sales.output.OrderRepresentation;
 import org.assertj.core.data.Offset;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -84,7 +86,7 @@ public class OrderAppUnitTest {
         OrderCommand command = new OrderCommand("0000001",
                 "2019-01-01 10:00:00", "0001",
                 items,
-                null,
+                getPaymentCommands("100"),
                 null);
         OrderFactory factory = new OrderFactory(memberRepository, productRepository);
         Order order = factory.createOrder(command);
@@ -104,7 +106,7 @@ public class OrderAppUnitTest {
         OrderCommand command = new OrderCommand("0000001",
                 "2019-01-01 10:00:00", "0001",
                 items,
-                null,
+                getPaymentCommands("100"),
                 null);
         OrderFactory factory = new OrderFactory(memberRepository, productRepository);
         Order order = factory.createOrder(command);
@@ -123,7 +125,7 @@ public class OrderAppUnitTest {
         OrderCommand command = new OrderCommand("0000001",
                 "2019-01-01 10:00:00", "0001",
                 items,
-                null,
+                getPaymentCommands("10000"),
                 null);
         OrderFactory factory = new OrderFactory(memberRepository, productRepository);
         Order order = factory.createOrder(command);
@@ -134,6 +136,12 @@ public class OrderAppUnitTest {
         assertEquals(MemberType.GOLD.toString(), representation.getNewMemberType());
     }
 
+    private List<PaymentCommand> getPaymentCommands(String money) {
+        List<PaymentCommand> payments = new ArrayList<>();
+        payments.add(new PaymentCommand("账户余额", new BigDecimal(money)));
+        return payments;
+    }
+
     @Test
     public void should_support_discount_percent_90() {
         ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
@@ -142,7 +150,7 @@ public class OrderAppUnitTest {
         OrderCommand command = new OrderCommand("0000001",
                 "2019-01-01 10:00:00", "0001",
                 items,
-                null,
+                getPaymentCommands("9000"),
                 Arrays.asList("9折券"));
         OrderFactory factory = new OrderFactory(memberRepository, productRepository);
         Order order = factory.createOrder(command);
@@ -163,7 +171,7 @@ public class OrderAppUnitTest {
         OrderCommand command = new OrderCommand("0000001",
                 "2019-01-01 10:00:00", "0001",
                 items,
-                null,
+                getPaymentCommands("9500"),
                 Arrays.asList("95折券"));
         OrderFactory factory = new OrderFactory(memberRepository, productRepository);
         Order order = factory.createOrder(command);
@@ -184,7 +192,7 @@ public class OrderAppUnitTest {
         OrderCommand command = new OrderCommand("0000001",
                 "2019-01-01 10:00:00", "0001",
                 items,
-                null,
+                getPaymentCommands("8950"),
                 null);
         OrderFactory factory = new OrderFactory(memberRepository, productRepository);
         Order order = factory.createOrder(command);
@@ -195,6 +203,23 @@ public class OrderAppUnitTest {
         assertThat(representation.getReceivables()).isCloseTo(new BigDecimal("8950"), Offset.offset(new BigDecimal("0.001")));
         assertEquals(1, representation.getDiscounts().size());
         assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal("1050"), Offset.offset(new BigDecimal("0.001")));
+    }
+
+    @Test(expected = OrderCheckoutException.class)
+    public void should_fail_when_checkout_given_payment_not_match_total_price() {
+        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
+        items.add(new OrderItemCommand("001", new BigDecimal("1000")));
+
+        ArrayList<PaymentCommand> payments = new ArrayList<>();
+        payments.add(new PaymentCommand("余额支付", new BigDecimal("100")));
+        OrderCommand command = new OrderCommand("0000001",
+                "2019-01-01 10:00:00", "0001",
+                items,
+                payments,
+                null);
+        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
+        Order order = factory.createOrder(command);
+        order.checkout();
     }
 
 }

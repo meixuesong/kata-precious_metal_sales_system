@@ -2,6 +2,7 @@ package com.coding.sales;
 
 import com.coding.sales.input.OrderCommand;
 import com.coding.sales.input.OrderItemCommand;
+import com.coding.sales.input.PaymentCommand;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,9 +25,19 @@ public class OrderFactory {
         Order order = new Order(command.getOrderId(),
                 getCreateTime(command.getCreateTime()), member,
                 getOrderItems(command),
-                getDiscounts(command));
+                getDiscounts(command),
+                getPayments(command));
 
         return order;
+    }
+
+    private List<Payment> getPayments(OrderCommand command) {
+        List<Payment> payments = new ArrayList<>();
+        for (PaymentCommand payment : command.getPayments()) {
+            payments.add(new Payment(payment.getType(), payment.getAmount()));
+        }
+
+        return payments;
     }
 
     private List<Discount> getDiscounts(OrderCommand command) {

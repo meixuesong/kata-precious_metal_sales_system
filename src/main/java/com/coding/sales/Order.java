@@ -14,16 +14,27 @@ public class Order {
     private MemberType oldMemberType;
     private int memberPointsIncreased;
     private List<OrderItem> items;
+    private List<Payment> payments;
+
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
+
     private List<Discount> discounts;
 
 
-    public Order(String id, Date createTime, Member member, List<OrderItem> items, List<Discount> discounts) {
+    public Order(String id, Date createTime, Member member, List<OrderItem> items, List<Discount> discounts, List<Payment> payments) {
         this.id = id;
         this.createTime = createTime;
         this.member = member;
         this.oldMemberType = member.getType();
         this.items = items;
         this.discounts = discounts;
+        this.payments = payments;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
     }
 
     public void checkout() {
@@ -31,7 +42,19 @@ public class Order {
         calcPromotion();
         calcTotalDiscountPrice();
         calcReceivables();
+        checkPayment();
         calcMemberPoints();
+    }
+
+    private void checkPayment() {
+        BigDecimal totalPayment = BigDecimal.ZERO;
+        for (Payment payment : payments) {
+            totalPayment = totalPayment.add(payment.getAmount());
+        }
+
+        if (totalPayment.compareTo(receivables) != 0) {
+            throw new OrderCheckoutException("付款金额与应收金额不一致。");
+        }
     }
 
     private void calcPromotion() {
