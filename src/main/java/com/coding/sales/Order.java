@@ -14,10 +14,10 @@ public class Order {
     private MemberType oldMemberType;
     private int memberPointsIncreased;
     private List<OrderItem> items;
-    private List<DISCOUNT> discounts;
+    private List<Discount> discounts;
 
 
-    public Order(String id, Date createTime, Member member, List<OrderItem> items, List<DISCOUNT> discounts) {
+    public Order(String id, Date createTime, Member member, List<OrderItem> items, List<Discount> discounts) {
         this.id = id;
         this.createTime = createTime;
         this.member = member;
@@ -27,30 +27,38 @@ public class Order {
     }
 
     public void checkout() {
-        calcTotalPrice(this.items);
-        this.memberPointsIncreased = this.member.pay(this.receivables);
+        calcTotalPrice();
+        calcDiscountPrice();
+        calcReceivables();
+        calcMemberPoints();
     }
 
-    private void calcTotalPrice(List<OrderItem> items) {
-        for (OrderItem item : items) {
-            totalPrice = totalPrice.add(item.getSubTotal());
-        }
+    private void calcReceivables() {
+        receivables = totalPrice.subtract(totalDiscountPrice);
+    }
 
-        receivables = BigDecimal.ZERO;
+    private void calcDiscountPrice() {
         totalDiscountPrice = BigDecimal.ZERO;
         for (OrderItem item : items) {
             item.calcDiscount(discounts);
-            receivables = receivables.add(item.getReceivables());
             totalDiscountPrice = totalDiscountPrice.add(item.getDiscount());
+        }
+    }
+
+    private void calcMemberPoints() {
+        int oldPoints = member.getPoints();
+        member.pay(this.receivables);
+        memberPointsIncreased = member.getPoints() - oldPoints;
+    }
+
+    private void calcTotalPrice() {
+        for (OrderItem item : items) {
+            totalPrice = totalPrice.add(item.getSubTotal());
         }
     }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public String getId() {
@@ -73,23 +81,12 @@ public class Order {
         return oldMemberType;
     }
 
-    public void setOldMemberType(MemberType oldMemberType) {
-        this.oldMemberType = oldMemberType;
-    }
-
     public MemberType getNewMemberType() {
         return member.getType();
     }
 
-    public void setNewMemberType(MemberType newMemberType) {
-    }
-
     public int getMemberPointsIncreased() {
         return memberPointsIncreased;
-    }
-
-    public void setMemberPointsIncreased(int memberPointsIncreased) {
-        this.memberPointsIncreased = memberPointsIncreased;
     }
 
     public List<OrderItem> getItems() {

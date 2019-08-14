@@ -30,13 +30,11 @@ public class Member {
         return type;
     }
 
-    int pay(BigDecimal receivables) {
-        int increasedPoints = getType().getRate().multiply(new BigDecimal(receivables.intValue())).intValue();
+    public void pay(BigDecimal money) {
+        int increasedPoints = getType().getRate().multiply(new BigDecimal(money.intValue())).intValue();
         points += increasedPoints;
 
         this.type = MemberType.getMemberType(this.points);
-
-        return points;
     }
 
 }

@@ -32,7 +32,7 @@ public class OrderAppUnitTest {
                 new Product("001", "PROD", new BigDecimal("10.00")));
 
         Product discountProd = new Product("002", "PROD", new BigDecimal("10.00"));
-        discountProd.addDiscount(DISCOUNT.PERCENT_90);
+        discountProd.addDiscount(Discount.PERCENT_90);
         when(productRepository.findById(eq("002"))).thenReturn(discountProd);
     }
 

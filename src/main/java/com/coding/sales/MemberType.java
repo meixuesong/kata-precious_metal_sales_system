@@ -20,10 +20,6 @@ public enum MemberType {
         this.maxPoints = maxPoints;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public BigDecimal getRate() {
         return rate;
     }

@@ -2,19 +2,19 @@ package com.coding.sales;
 
 import java.math.BigDecimal;
 
-public enum DISCOUNT {
+public enum Discount {
     PERCENT_90("9折券", new BigDecimal("0.9"));
 
     private String value;
     private BigDecimal discountRate;
 
-    DISCOUNT(String value, BigDecimal discountRate) {
+    Discount(String value, BigDecimal discountRate) {
         this.value = value;
         this.discountRate = discountRate;
     }
 
-    public static DISCOUNT from(String value) {
-        for (DISCOUNT discount : DISCOUNT.values()) {
+    public static Discount from(String value) {
+        for (Discount discount : Discount.values()) {
             if (discount.value.equalsIgnoreCase(value)) {
                 return discount;
             }

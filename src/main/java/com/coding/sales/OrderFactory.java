@@ -29,10 +29,10 @@ public class OrderFactory {
         return order;
     }
 
-    private List<DISCOUNT> getDiscounts(OrderCommand command) {
-        List<DISCOUNT> discounts = new ArrayList<DISCOUNT>();
+    private List<Discount> getDiscounts(OrderCommand command) {
+        List<Discount> discounts = new ArrayList<Discount>();
         for (String discount : command.getDiscounts()) {
-            discounts.add(DISCOUNT.from(discount));
+            discounts.add(Discount.from(discount));
         }
         return discounts;
     }
