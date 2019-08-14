@@ -9,6 +9,7 @@ public class Product {
     private String name;
     private BigDecimal price;
     private List<Discount> discounts = new ArrayList<Discount>();
+    private ArrayList<MoneyOff> moneyOffs = new ArrayList<>();
 
     public Product(String id, String name, BigDecimal price) {
         this.id = id;
@@ -34,5 +35,13 @@ public class Product {
 
     public List<Discount> getDiscounts() {
         return discounts;
+    }
+
+    public void addMoneyOff(MoneyOff moneyOff) {
+        moneyOffs.add(moneyOff);
+    }
+
+    public List<MoneyOff> getMoneyOffs() {
+        return moneyOffs;
     }
 }

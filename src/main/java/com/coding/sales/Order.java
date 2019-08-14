@@ -28,19 +28,33 @@ public class Order {
 
     public void checkout() {
         calcTotalPrice();
-        calcDiscountPrice();
+        calcPromotion();
+        calcTotalDiscountPrice();
         calcReceivables();
         calcMemberPoints();
+    }
+
+    private void calcPromotion() {
+        for (Discount discount : discounts) {
+            for (OrderItem item : items) {
+                discount.calcPromotion(item);
+            }
+        }
+
+        for (MoneyOff moneyOff : MoneyOff.values()) {
+            for (OrderItem item : items) {
+                moneyOff.calcPromotion(item);
+            }
+        }
     }
 
     private void calcReceivables() {
         receivables = totalPrice.subtract(totalDiscountPrice);
     }
 
-    private void calcDiscountPrice() {
+    private void calcTotalDiscountPrice() {
         totalDiscountPrice = BigDecimal.ZERO;
         for (OrderItem item : items) {
-            item.calcDiscount(discounts);
             totalDiscountPrice = totalDiscountPrice.add(item.getDiscount());
         }
     }

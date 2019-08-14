@@ -40,6 +40,10 @@ public class OrderAppUnitTest {
         Product discount95Prod = new Product("PROD_ID_PERCENT_95", "PROD", new BigDecimal("10.00"));
         discount95Prod.addDiscount(Discount.PERCENT_95);
         when(productRepository.findById(eq("PROD_ID_PERCENT_95"))).thenReturn(discount95Prod);
+
+        Product MoneyOffProd = new Product("MONEY_OFF", "PROD", new BigDecimal("10.00"));
+        MoneyOffProd.addMoneyOff(MoneyOff.OFF_350_PER_3000);
+        when(productRepository.findById(eq("MONEY_OFF"))).thenReturn(MoneyOffProd);
     }
 
     @Test
@@ -171,4 +175,26 @@ public class OrderAppUnitTest {
         assertEquals(1, representation.getDiscounts().size());
         assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal("500"), Offset.offset(new BigDecimal("0.001")));
     }
+
+    @Test
+    public void should_support_money_off() {
+        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
+        items.add(new OrderItemCommand("MONEY_OFF", new BigDecimal("1000")));
+
+        OrderCommand command = new OrderCommand("0000001",
+                "2019-01-01 10:00:00", "0001",
+                items,
+                null,
+                null);
+        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
+        Order order = factory.createOrder(command);
+        order.checkout();
+
+        OrderRepresentation representation = new OrderRepresentation(order);
+
+        assertThat(representation.getReceivables()).isCloseTo(new BigDecimal("8950"), Offset.offset(new BigDecimal("0.001")));
+        assertEquals(1, representation.getDiscounts().size());
+        assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal("1050"), Offset.offset(new BigDecimal("0.001")));
+    }
+
 }

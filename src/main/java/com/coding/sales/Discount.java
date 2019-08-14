@@ -2,7 +2,7 @@ package com.coding.sales;
 
 import java.math.BigDecimal;
 
-public enum Discount {
+public enum Discount implements Promotion{
     PERCENT_90("9折券", new BigDecimal("0.9")), PERCENT_95("95折券", new BigDecimal("0.95"));
 
     private String value;
@@ -30,5 +30,15 @@ public enum Discount {
     @Override
     public String toString() {
         return value;
+    }
+
+    @Override
+    public void calcPromotion(OrderItem item) {
+        if (item.getProduct().getDiscounts().contains(this)) {
+            BigDecimal discountMoney = item.getProduct().getPrice().multiply(item.getAmount()).multiply(
+                    BigDecimal.ONE.subtract(getDiscountRate()));
+
+            item.setDiscount(discountMoney);
+        }
     }
 }

@@ -27,26 +27,15 @@ public class OrderItem {
         return subTotal;
     }
 
-    public void calcDiscount(List<Discount> discounts) {
-        for (Discount item : discounts) {
-            this.discount = calcDiscount(discounts, item);
-        }
-    }
-
-    private BigDecimal calcDiscount(List<Discount> discounts, Discount discount) {
-        if (discounts.contains(discount) && product.getDiscounts().contains(discount)) {
-            return product.getPrice().multiply(amount).multiply(
-                    BigDecimal.ONE.subtract(discount.getDiscountRate()));
-        }
-
-        return BigDecimal.ZERO;
-    }
-
     public BigDecimal getReceivables() {
         return subTotal.subtract(discount);
     }
 
     public BigDecimal getDiscount() {
         return this.discount;
+    }
+
+    public void setDiscount(BigDecimal money) {
+        this.discount = money;
     }
 }
