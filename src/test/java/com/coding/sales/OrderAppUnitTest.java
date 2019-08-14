@@ -3,6 +3,7 @@ package com.coding.sales;
 import com.coding.sales.input.OrderCommand;
 import com.coding.sales.input.OrderItemCommand;
 import com.coding.sales.output.OrderRepresentation;
+import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -34,6 +36,10 @@ public class OrderAppUnitTest {
         Product discountProd = new Product("002", "PROD", new BigDecimal("10.00"));
         discountProd.addDiscount(Discount.PERCENT_90);
         when(productRepository.findById(eq("002"))).thenReturn(discountProd);
+
+        Product discount95Prod = new Product("PROD_ID_PERCENT_95", "PROD", new BigDecimal("10.00"));
+        discount95Prod.addDiscount(Discount.PERCENT_95);
+        when(productRepository.findById(eq("PROD_ID_PERCENT_95"))).thenReturn(discount95Prod);
     }
 
     @Test
@@ -125,7 +131,7 @@ public class OrderAppUnitTest {
     }
 
     @Test
-    public void should_support_discount() {
+    public void should_support_discount_percent_90() {
         ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
         items.add(new OrderItemCommand("002", new BigDecimal("1000")));
 
@@ -140,9 +146,29 @@ public class OrderAppUnitTest {
 
         OrderRepresentation representation = new OrderRepresentation(order);
 
-        assertTrue(new BigDecimal("9000").compareTo(representation.getReceivables()) == 0);
+        assertThat(representation.getReceivables()).isCloseTo(new BigDecimal("9000"), Offset.offset(new BigDecimal("0.001")));
         assertEquals(1, representation.getDiscounts().size());
-        assertTrue(new BigDecimal("1000.00").compareTo(representation.getTotalDiscountPrice()) == 0);
+        assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal("1000"), Offset.offset(new BigDecimal("0.001")));
     }
 
+    @Test
+    public void should_support_discount_percent_95() {
+        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
+        items.add(new OrderItemCommand("PROD_ID_PERCENT_95", new BigDecimal("1000")));
+
+        OrderCommand command = new OrderCommand("0000001",
+                "2019-01-01 10:00:00", "0001",
+                items,
+                null,
+                Arrays.asList("95折券"));
+        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
+        Order order = factory.createOrder(command);
+        order.checkout();
+
+        OrderRepresentation representation = new OrderRepresentation(order);
+
+        assertThat(representation.getReceivables()).isCloseTo(new BigDecimal("9500"), Offset.offset(new BigDecimal("0.001")));
+        assertEquals(1, representation.getDiscounts().size());
+        assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal("500"), Offset.offset(new BigDecimal("0.001")));
+    }
 }

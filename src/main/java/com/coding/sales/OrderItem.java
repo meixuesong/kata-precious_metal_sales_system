@@ -28,10 +28,18 @@ public class OrderItem {
     }
 
     public void calcDiscount(List<Discount> discounts) {
-        if (discounts.contains(Discount.PERCENT_90) && product.getDiscounts().contains(Discount.PERCENT_90)) {
-            discount = product.getPrice().multiply(amount).multiply(
-                    BigDecimal.ONE.subtract(Discount.PERCENT_90.getDiscountRate()));
+        for (Discount item : discounts) {
+            this.discount = calcDiscount(discounts, item);
         }
+    }
+
+    private BigDecimal calcDiscount(List<Discount> discounts, Discount discount) {
+        if (discounts.contains(discount) && product.getDiscounts().contains(discount)) {
+            return product.getPrice().multiply(amount).multiply(
+                    BigDecimal.ONE.subtract(discount.getDiscountRate()));
+        }
+
+        return BigDecimal.ZERO;
     }
 
     public BigDecimal getReceivables() {
