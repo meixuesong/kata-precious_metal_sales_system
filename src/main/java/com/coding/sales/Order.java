@@ -9,17 +9,21 @@ public class Order {
     private Date createTime;
     private Member member;
     private BigDecimal totalPrice = BigDecimal.ZERO;
+    private BigDecimal totalDiscountPrice = BigDecimal.ZERO;
     private BigDecimal receivables = BigDecimal.ZERO;
     private MemberType oldMemberType;
     private int memberPointsIncreased;
     private List<OrderItem> items;
+    private List<DISCOUNT> discounts;
 
-    public Order(String id, Date createTime, Member member, List<OrderItem> items) {
+
+    public Order(String id, Date createTime, Member member, List<OrderItem> items, List<DISCOUNT> discounts) {
         this.id = id;
         this.createTime = createTime;
         this.member = member;
         this.oldMemberType = member.getType();
         this.items = items;
+        this.discounts = discounts;
     }
 
     public void checkout() {
@@ -31,7 +35,14 @@ public class Order {
         for (OrderItem item : items) {
             totalPrice = totalPrice.add(item.getSubTotal());
         }
-        receivables = totalPrice;
+
+        receivables = BigDecimal.ZERO;
+        totalDiscountPrice = BigDecimal.ZERO;
+        for (OrderItem item : items) {
+            item.calcDiscount(discounts);
+            receivables = receivables.add(item.getReceivables());
+            totalDiscountPrice = totalDiscountPrice.add(item.getDiscount());
+        }
     }
 
     public BigDecimal getTotalPrice() {
@@ -84,4 +95,10 @@ public class Order {
     public List<OrderItem> getItems() {
         return items;
     }
+
+
+    public BigDecimal getTotalDiscountPrice() {
+        return totalDiscountPrice;
+    }
+
 }

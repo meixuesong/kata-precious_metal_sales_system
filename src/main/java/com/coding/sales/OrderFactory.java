@@ -23,10 +23,18 @@ public class OrderFactory {
 
         Order order = new Order(command.getOrderId(),
                 getCreateTime(command.getCreateTime()), member,
-                getOrderItems(command)
-                );
+                getOrderItems(command),
+                getDiscounts(command));
 
         return order;
+    }
+
+    private List<DISCOUNT> getDiscounts(OrderCommand command) {
+        List<DISCOUNT> discounts = new ArrayList<DISCOUNT>();
+        for (String discount : command.getDiscounts()) {
+            discounts.add(DISCOUNT.from(discount));
+        }
+        return discounts;
     }
 
     private List<OrderItem> getOrderItems(OrderCommand command) {

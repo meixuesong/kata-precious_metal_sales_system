@@ -34,8 +34,8 @@ public class OrderCommand {
         this.createTime = createTime;
         this.memberId = memberId;
         this.items = items;
-        this.payments = payments;
-        this.discounts = discounts;
+        this.payments = payments == null ? new ArrayList<PaymentCommand>(): payments;
+        this.discounts = discounts == null ? new ArrayList<String>(): discounts;
     }
 
     public String getMemberId() {

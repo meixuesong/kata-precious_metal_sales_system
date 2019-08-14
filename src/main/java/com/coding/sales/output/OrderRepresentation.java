@@ -82,11 +82,26 @@ public class OrderRepresentation {
         this.memberPoints = order.getMember().getPoints();
         this.items = getOrderItemRepresentations(order);
         this.totalPrice = order.getTotalPrice();
-        this.discounts = new ArrayList<DiscountItemRepresentation>();
-        this.totalDiscountPrice = BigDecimal.ZERO;
+        this.discounts = getDiscountItemRepresentations(order);
+        this.totalDiscountPrice = order.getTotalDiscountPrice();
         this.receivables = order.getReceivables();
         this.payments = new ArrayList<PaymentRepresentation>();
         this.discountCards = new ArrayList<String>();
+    }
+
+    private ArrayList<DiscountItemRepresentation> getDiscountItemRepresentations(Order order) {
+        ArrayList<DiscountItemRepresentation> discounts = new ArrayList<DiscountItemRepresentation>();
+        for (OrderItem item : order.getItems()) {
+            if (item.getDiscount().compareTo(BigDecimal.ZERO) <= 0) {
+                continue;
+            }
+
+            discounts.add(new DiscountItemRepresentation(item.getProduct().getId(),
+                    item.getProduct().getName(),
+                    item.getDiscount()));
+        }
+
+        return discounts;
     }
 
     private ArrayList<OrderItemRepresentation> getOrderItemRepresentations(Order order) {
@@ -234,5 +249,13 @@ public class OrderRepresentation {
 
     public String getNewMemberType() {
         return newMemberType;
+    }
+
+    public List<DiscountItemRepresentation> getDiscounts() {
+        return discounts;
+    }
+
+    public BigDecimal getTotalDiscountPrice() {
+        return totalDiscountPrice;
     }
 }

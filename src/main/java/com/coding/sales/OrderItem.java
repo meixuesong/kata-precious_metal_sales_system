@@ -1,11 +1,13 @@
 package com.coding.sales;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class OrderItem {
     private Product product;
     private BigDecimal amount;
     private BigDecimal subTotal;
+    private BigDecimal discount = BigDecimal.ZERO;
 
     public OrderItem(Product product, BigDecimal amount) {
         this.product = product;
@@ -23,5 +25,20 @@ public class OrderItem {
 
     public BigDecimal getSubTotal() {
         return subTotal;
+    }
+
+    public void calcDiscount(List<DISCOUNT> discounts) {
+        if (discounts.contains(DISCOUNT.PERCENT_90)) {
+            discount = product.getPrice().multiply(amount).multiply(
+                    BigDecimal.ONE.subtract(DISCOUNT.PERCENT_90.getDiscountRate()));
+        }
+    }
+
+    public BigDecimal getReceivables() {
+        return subTotal.subtract(discount);
+    }
+
+    public BigDecimal getDiscount() {
+        return this.discount;
     }
 }

@@ -8,10 +8,12 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,8 +28,12 @@ public class OrderAppUnitTest {
         when(memberRepository.findById(anyString())).thenReturn(new Member("0001", "ABC", MemberType.NORMAL));
 
         productRepository = mock(ProductRepository.class);
-        when(productRepository.findById(anyString())).thenReturn(
+        when(productRepository.findById(eq("001"))).thenReturn(
                 new Product("001", "PROD", new BigDecimal("10.00")));
+
+        Product discountProd = new Product("002", "PROD", new BigDecimal("10.00"));
+        discountProd.addDiscount(DISCOUNT.PERCENT_90);
+        when(productRepository.findById(eq("002"))).thenReturn(discountProd);
     }
 
     @Test
@@ -117,4 +123,26 @@ public class OrderAppUnitTest {
 
         assertEquals(MemberType.GOLD.toString(), representation.getNewMemberType());
     }
+
+    @Test
+    public void should_support_discount() {
+        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
+        items.add(new OrderItemCommand("002", new BigDecimal("1000")));
+
+        OrderCommand command = new OrderCommand("0000001",
+                "2019-01-01 10:00:00", "0001",
+                items,
+                null,
+                Arrays.asList("9折券"));
+        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
+        Order order = factory.createOrder(command);
+        order.checkout();
+
+        OrderRepresentation representation = new OrderRepresentation(order);
+
+        assertTrue(new BigDecimal("9000").compareTo(representation.getReceivables()) == 0);
+        assertEquals(1, representation.getDiscounts().size());
+        assertTrue(new BigDecimal("1000.00").compareTo(representation.getTotalDiscountPrice()) == 0);
+    }
+
 }

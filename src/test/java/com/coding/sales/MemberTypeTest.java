@@ -15,9 +15,13 @@ public class MemberTypeTest {
     public static Collection<Object[]> parameters() {
         Object[][] data = new Object[][] {
                 {0, MemberType.NORMAL},
+                {9999, MemberType.NORMAL},
                 {10000, MemberType.GOLD},
-                {60000, MemberType.PLATINUM},
-                {10000000, MemberType.DIAMOND},
+                {49999, MemberType.GOLD},
+                {50000, MemberType.PLATINUM},
+                {99999, MemberType.PLATINUM},
+                {100000, MemberType.DIAMOND},
+                {900000, MemberType.DIAMOND}
         };
 
         return Arrays.asList(data);

@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 public enum MemberType {
     NORMAL("普卡", new BigDecimal("1.0"), 0, 9999),
     GOLD("金卡", new BigDecimal("1.5"), 10000, 49999),
-    PLATINUM("白金", new BigDecimal("1.8"), 50000, 99999),
-    DIAMOND("钻石", new BigDecimal("2.0"), 100000, Integer.MAX_VALUE);
+    PLATINUM("白金卡", new BigDecimal("1.8"), 50000, 99999),
+    DIAMOND("钻石卡", new BigDecimal("2.0"), 100000, Integer.MAX_VALUE);
 
     String name;
     private BigDecimal rate;
