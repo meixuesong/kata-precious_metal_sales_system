@@ -26,36 +26,37 @@ public class OrderAppUnitTest {
     private MemberRepository memberRepository;
     private ProductRepository productRepository;
 
+    public static final String MEMBER_NO = "0001";
+    public static final BigDecimal PRODUCT_PRICE = new BigDecimal("10.00");
+
     @Before
     public void setUp() throws Exception {
         memberRepository = mock(MemberRepository.class);
-        when(memberRepository.findById(anyString())).thenReturn(new Member("0001", "ABC", MemberType.NORMAL));
+        when(memberRepository.findById(anyString())).thenReturn(new Member(MEMBER_NO, "", MemberType.NORMAL));
 
         productRepository = mock(ProductRepository.class);
-        when(productRepository.findById(eq("001"))).thenReturn(
-                new Product("001", "PROD", new BigDecimal("10.00")));
+        when(productRepository.findById(eq("PROD_ID_NORMAL_PRODUCT"))).thenReturn(
+                new Product("PROD_ID_NORMAL_PRODUCT", "", PRODUCT_PRICE));
 
-        Product discountProd = new Product("002", "PROD", new BigDecimal("10.00"));
-        discountProd.addDiscount(Discount.PERCENT_90);
-        when(productRepository.findById(eq("002"))).thenReturn(discountProd);
+        Product discount90Prod = new Product("PROD_ID_DISCOUNT90", "PROD", PRODUCT_PRICE);
+        discount90Prod.addDiscount(Discount.PERCENT_90);
+        when(productRepository.findById(eq("PROD_ID_DISCOUNT90"))).thenReturn(discount90Prod);
 
-        Product discount95Prod = new Product("PROD_ID_PERCENT_95", "PROD", new BigDecimal("10.00"));
+        Product discount95Prod = new Product("PROD_ID_PERCENT_95", "PROD", PRODUCT_PRICE);
         discount95Prod.addDiscount(Discount.PERCENT_95);
         when(productRepository.findById(eq("PROD_ID_PERCENT_95"))).thenReturn(discount95Prod);
 
-        Product MoneyOffProd = new Product("MONEY_OFF", "PROD", new BigDecimal("10.00"));
+        Product MoneyOffProd = new Product("PROD_ID_MONEY_OFF", "PROD", PRODUCT_PRICE);
         MoneyOffProd.addMoneyOff(MoneyOff.OFF_350_PER_3000);
-        when(productRepository.findById(eq("MONEY_OFF"))).thenReturn(MoneyOffProd);
+        when(productRepository.findById(eq("PROD_ID_MONEY_OFF"))).thenReturn(MoneyOffProd);
     }
 
     @Test
     public void should_support_empty_order() {
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001", new ArrayList<OrderItemCommand>(), null,
-                null);
+        ArrayList<OrderItemCommand> items = null;
+        List<String> discounts = null;
+        Order order = createOrder(items, "0", discounts);
 
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
         order.checkout();
 
         assertTrue(order.getTotalPrice().compareTo(BigDecimal.ZERO) == 0);
@@ -64,12 +65,7 @@ public class OrderAppUnitTest {
 
     @Test
     public void should_support_empty_order_print() {
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001", new ArrayList<OrderItemCommand>(), null,
-                null);
-
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
+        Order order = createOrder(null, "0", null);
         order.checkout();
 
         OrderRepresentation representation = new OrderRepresentation(order);
@@ -80,36 +76,19 @@ public class OrderAppUnitTest {
 
     @Test
     public void should_calc_price_given_an_order() {
-        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
-        items.add(new OrderItemCommand("001", BigDecimal.TEN));
-
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001",
-                items,
-                getPaymentCommands("100"),
-                null);
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
+        List<OrderItemCommand> items = Arrays.asList(new OrderItemCommand("PROD_ID_NORMAL_PRODUCT", BigDecimal.TEN));
+        Order order = createOrder(items, "100", null);
         order.checkout();
 
         OrderRepresentation representation = new OrderRepresentation(order);
 
-        assertTrue(representation.getTotalPrice().compareTo(new BigDecimal("100.00")) == 0);
-        assertTrue(representation.getReceivables().compareTo(new BigDecimal("100.00")) == 0);
+        validateReceivablesAndTotalDiscount(representation, "100.00", "0.00");
     }
 
     @Test
     public void should_calc_member_points_for_an_order() {
-        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
-        items.add(new OrderItemCommand("001", BigDecimal.TEN));
-
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001",
-                items,
-                getPaymentCommands("100"),
-                null);
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
+        List<OrderItemCommand> items = Arrays.asList(new OrderItemCommand("PROD_ID_NORMAL_PRODUCT", BigDecimal.TEN));
+        Order order = createOrder(items, "100", null);
         order.checkout();
 
         OrderRepresentation representation = new OrderRepresentation(order);
@@ -119,21 +98,72 @@ public class OrderAppUnitTest {
 
     @Test
     public void should_increase_member_type() {
-        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
-        items.add(new OrderItemCommand("001", new BigDecimal("1000")));
-
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001",
-                items,
-                getPaymentCommands("10000"),
-                null);
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
+        List<OrderItemCommand> items = Arrays.asList(new OrderItemCommand("PROD_ID_NORMAL_PRODUCT", new BigDecimal("1000")));
+        Order order = createOrder(items, "10000", null);
         order.checkout();
 
         OrderRepresentation representation = new OrderRepresentation(order);
 
         assertEquals(MemberType.GOLD.toString(), representation.getNewMemberType());
+    }
+
+    @Test
+    public void should_support_discount_percent_90() {
+        List<OrderItemCommand> items = Arrays.asList(new OrderItemCommand("PROD_ID_DISCOUNT90", new BigDecimal("1000")));
+        Order order = createOrder(items, "9000", Arrays.asList("9折券"));
+        order.checkout();
+
+        OrderRepresentation representation = new OrderRepresentation(order);
+
+        assertEquals(1, representation.getDiscounts().size());
+        validateReceivablesAndTotalDiscount(representation, "9000", "1000");
+    }
+
+    @Test
+    public void should_support_discount_percent_95() {
+        List<OrderItemCommand> items = Arrays.asList(new OrderItemCommand("PROD_ID_PERCENT_95", new BigDecimal("1000")));
+        Order order = createOrder(items, "9500", Arrays.asList("95折券"));
+        order.checkout();
+
+        OrderRepresentation representation = new OrderRepresentation(order);
+
+        assertEquals(1, representation.getDiscounts().size());
+        validateReceivablesAndTotalDiscount(representation, "9500", "500");
+    }
+
+    @Test
+    public void should_support_money_off() {
+        List<OrderItemCommand> items = Arrays.asList(new OrderItemCommand("PROD_ID_MONEY_OFF", new BigDecimal("1000")));
+        Order order = createOrder(items, "8950", null);
+        order.checkout();
+
+        OrderRepresentation representation = new OrderRepresentation(order);
+
+        validateReceivablesAndTotalDiscount(representation, "8950", "1050");
+        assertEquals(1, representation.getDiscounts().size());
+    }
+
+    @Test(expected = OrderCheckoutException.class)
+    public void should_fail_when_checkout_given_payment_not_match_total_price() {
+        List<OrderItemCommand> items = Arrays.asList(new OrderItemCommand("PROD_ID_NORMAL_PRODUCT", new BigDecimal("1000")));
+
+        Order order = createOrder(items, "100", null);
+        order.checkout();
+    }
+
+
+    private Order createOrder(List<OrderItemCommand> items, String payment, List<String> discounts) {
+        String memberId = "0001";
+        String createTime = "2019-01-01 10:00:00";
+        List<OrderItemCommand> itemCommands = items == null ? new ArrayList<>() : items;
+        List<String> discountCommands = discounts == null ? new ArrayList<>() : discounts;
+
+        OrderCommand command = new OrderCommand("ORDER_ID", createTime, memberId,
+                itemCommands, getPaymentCommands(payment), discountCommands);
+
+        OrderFactory orderFactory = new OrderFactory(memberRepository, productRepository);
+
+        return orderFactory.createOrder(command);
     }
 
     private List<PaymentCommand> getPaymentCommands(String money) {
@@ -142,84 +172,10 @@ public class OrderAppUnitTest {
         return payments;
     }
 
-    @Test
-    public void should_support_discount_percent_90() {
-        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
-        items.add(new OrderItemCommand("002", new BigDecimal("1000")));
+    private void validateReceivablesAndTotalDiscount(OrderRepresentation representation, String receivables, String totalDiscount) {
+        Offset<BigDecimal> offset = Offset.offset(new BigDecimal("0.001"));
 
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001",
-                items,
-                getPaymentCommands("9000"),
-                Arrays.asList("9折券"));
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
-        order.checkout();
-
-        OrderRepresentation representation = new OrderRepresentation(order);
-
-        assertThat(representation.getReceivables()).isCloseTo(new BigDecimal("9000"), Offset.offset(new BigDecimal("0.001")));
-        assertEquals(1, representation.getDiscounts().size());
-        assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal("1000"), Offset.offset(new BigDecimal("0.001")));
+        assertThat(representation.getReceivables()).isCloseTo(new BigDecimal(receivables), offset);
+        assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal(totalDiscount), offset);
     }
-
-    @Test
-    public void should_support_discount_percent_95() {
-        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
-        items.add(new OrderItemCommand("PROD_ID_PERCENT_95", new BigDecimal("1000")));
-
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001",
-                items,
-                getPaymentCommands("9500"),
-                Arrays.asList("95折券"));
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
-        order.checkout();
-
-        OrderRepresentation representation = new OrderRepresentation(order);
-
-        assertThat(representation.getReceivables()).isCloseTo(new BigDecimal("9500"), Offset.offset(new BigDecimal("0.001")));
-        assertEquals(1, representation.getDiscounts().size());
-        assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal("500"), Offset.offset(new BigDecimal("0.001")));
-    }
-
-    @Test
-    public void should_support_money_off() {
-        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
-        items.add(new OrderItemCommand("MONEY_OFF", new BigDecimal("1000")));
-
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001",
-                items,
-                getPaymentCommands("8950"),
-                null);
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
-        order.checkout();
-
-        OrderRepresentation representation = new OrderRepresentation(order);
-
-        assertThat(representation.getReceivables()).isCloseTo(new BigDecimal("8950"), Offset.offset(new BigDecimal("0.001")));
-        assertEquals(1, representation.getDiscounts().size());
-        assertThat(representation.getTotalDiscountPrice()).isCloseTo(new BigDecimal("1050"), Offset.offset(new BigDecimal("0.001")));
-    }
-
-    @Test(expected = OrderCheckoutException.class)
-    public void should_fail_when_checkout_given_payment_not_match_total_price() {
-        ArrayList<OrderItemCommand> items = new ArrayList<OrderItemCommand>();
-        items.add(new OrderItemCommand("001", new BigDecimal("1000")));
-
-        ArrayList<PaymentCommand> payments = new ArrayList<>();
-        payments.add(new PaymentCommand("余额支付", new BigDecimal("100")));
-        OrderCommand command = new OrderCommand("0000001",
-                "2019-01-01 10:00:00", "0001",
-                items,
-                payments,
-                null);
-        OrderFactory factory = new OrderFactory(memberRepository, productRepository);
-        Order order = factory.createOrder(command);
-        order.checkout();
-    }
-
 }
