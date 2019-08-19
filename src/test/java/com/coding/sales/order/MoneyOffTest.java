@@ -1,7 +1,5 @@
-package com.coding.sales;
+package com.coding.sales.order;
 
-import com.coding.sales.order.MoneyOff;
-import com.coding.sales.order.OrderItem;
 import com.coding.sales.product.Product;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
@@ -23,7 +21,7 @@ public class MoneyOffTest {
                 {MoneyOff.OFF_30_PER_2000, 200, 30},
                 {MoneyOff.OFF_30_PER_2000, 400, 60},
                 {MoneyOff.OFF_10_PER_1000, 100, 10},
-                {MoneyOff.BUY_3_HALF_1, 3, 5},
+                {MoneyOff.BUY_3_FREE_0_5, 3, 5},
                 {MoneyOff.BUY_4_FREE_1, 4, 10},
         };
 

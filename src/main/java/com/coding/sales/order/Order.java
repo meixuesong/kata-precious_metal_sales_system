@@ -4,6 +4,8 @@ import com.coding.sales.member.Member;
 import com.coding.sales.member.MemberType;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -52,17 +54,21 @@ public class Order {
     }
 
     private void calcPromotion() {
-        for (Discount discount : discounts) {
-            for (OrderItem item : items) {
-                discount.calcPromotion(item);
-            }
-        }
+        List<Promotion> promotions = getAllPromotions();
 
-        for (MoneyOff moneyOff : MoneyOff.values()) {
+        for (Promotion promotion : promotions) {
             for (OrderItem item : items) {
-                moneyOff.calcPromotion(item);
+                promotion.calcPromotion(item);
             }
         }
+    }
+
+    private List<Promotion> getAllPromotions() {
+        List<Promotion> promotions = new ArrayList<>();
+        promotions.addAll(discounts);
+        promotions.addAll(Arrays.asList(MoneyOff.values()));
+
+        return promotions;
     }
 
     private void calcReceivables() {

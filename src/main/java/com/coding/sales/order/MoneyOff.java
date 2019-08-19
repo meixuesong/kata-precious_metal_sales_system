@@ -27,7 +27,7 @@ public enum MoneyOff implements Promotion {
             }
         }
     },
-    BUY_3_HALF_1 {
+    BUY_3_FREE_0_5 {
         @Override
         public void calcPromotion(OrderItem item) {
             if (item.getProduct().getMoneyOffs().contains(this)) {

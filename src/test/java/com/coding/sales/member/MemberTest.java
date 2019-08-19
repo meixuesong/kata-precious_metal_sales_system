@@ -1,7 +1,5 @@
-package com.coding.sales;
+package com.coding.sales.member;
 
-import com.coding.sales.member.Member;
-import com.coding.sales.member.MemberType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -10,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class MemberTest {

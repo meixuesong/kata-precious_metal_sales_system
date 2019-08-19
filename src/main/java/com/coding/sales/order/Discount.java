@@ -37,7 +37,7 @@ public enum Discount implements Promotion{
     public void calcPromotion(OrderItem item) {
         if (item.getProduct().getDiscounts().contains(this)) {
             BigDecimal discountMoney = item.getProduct().getPrice().multiply(item.getAmount()).multiply(
-                    BigDecimal.ONE.subtract(getDiscountRate()));
+                    BigDecimal.ONE.subtract(getDiscountRate())).setScale(2, BigDecimal.ROUND_HALF_UP);
 
             item.setDiscount(discountMoney);
         }

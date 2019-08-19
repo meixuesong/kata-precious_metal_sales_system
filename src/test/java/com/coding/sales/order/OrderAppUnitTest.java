@@ -1,4 +1,4 @@
-package com.coding.sales;
+package com.coding.sales.order;
 
 import com.coding.sales.input.OrderCommand;
 import com.coding.sales.input.OrderItemCommand;
